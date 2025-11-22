@@ -50,7 +50,7 @@ export default function LoginPage() {
       const response = await axios.post('/api/users/login', formData);
       
       if (response.data.success) {
-        console.log('Login successful', response.data);
+        // console.log('Login successful', response.data);
         dispatch(login(response.data.user));
         router.push('/'); // Redirect to home or dashboard
       }
