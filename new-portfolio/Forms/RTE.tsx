@@ -13,51 +13,32 @@ export default function RTE({ name, Control, label, defaultValue = "" }: RTEProp
 
     return (
         <div className='w-full'>
-        {/* {label && <label className='inline-block mb-1 pl-1'>{label}</label>} */}
-        <Controller 
-        name={name}
-        control={Control}
-        render={({field:{onChange}})=>(
-            <Editor
-            apiKey={process.env.TINYMCE_API_KEY}
-            initialValue={defaultValue}
-            init={{
-                initialValue: defaultValue,
-                height: 500,
-                menubar: true,
-                // Add LTR direction to fix text input issue
-                directionality: 'ltr', // This fixes the RTL issue
-                plugins: [
-                    "image",
-                    "advlist",
-                    "autolink",
-                    "lists",
-                    "link",
-                    "image",
-                    "charmap",
-                    "preview",
-                    "anchor",
-                    "searchreplace",
-                    "visualblocks",
-                    "code",
-                    "fullscreen",
-                    "insertdatetime",
-                    "media",
-                    "table",
-                    "code",
-                    "help",
-                    "wordcount",
-                    "anchor",
-                ],
-                toolbar:
-                "undo redo | blocks | image | bold italic forecolor | alignleft aligncenter bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |removeformat | help",
-                content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px; text-align: left; }",
-            }}
-    
-            onEditorChange={onChange}
-             />
-        )}
-        />
+            {/* {label && <label className='inline-block mb-1 pl-1'>{label}</label>} */}
+            <Controller
+                name={name}
+                control={Control}
+                defaultValue={defaultValue} // <-- set here only
+                render={({ field: { onChange, value } }) => (
+                    <Editor
+                        apiKey={process.env.TINYMCE_API_KEY! || 'j8950u4ltrjsw7z9bgklvg3gksdivz62xu5xwew5s0bena93'}
+                        value={value} // controlled content
+                        init={{
+                            height: 500,
+                            menubar: true,
+                            directionality: 'ltr',
+                            plugins: [
+                                "image advlist autolink lists link charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount",
+                            ],
+                            toolbar:
+                                "undo redo | blocks | image | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help",
+                            content_style:
+                                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px; text-align: left; }",
+                        }}
+                        onEditorChange={onChange}
+                    />
+                )}
+            />
+
         </div>
     )
 }

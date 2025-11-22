@@ -40,9 +40,6 @@ function Postform({ post }: { post?: { _id: string; title: string; content: stri
         }
     }, [post, reset]);
 
-    console.log("Form Post:", post);
-    console.log("Current form values:", getValues());
-
     const submit = async (data: FormValues) => {
         if (post) {
             // Update existing post

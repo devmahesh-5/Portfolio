@@ -6,32 +6,16 @@ if (!MONGODB_URI) {
   throw new Error('❌ MONGODB_URI is not defined in environment variables');
 }
 
-// Use a global variable to keep connection across hot reloads in dev
-let cached = globalThis.mongoose;
-
-if (!cached) {
-  cached = globalThis.mongoose = { conn: null, promise: null };
-}
 
 async function connectDB() {
-  if (cached.conn) return cached.conn;
+  mongoose.connect(MONGODB_URI).then(() => {
+    console.log('✅ Connected to MongoDB');
+  }).catch((error) => {
+    console.error('❌ MongoDB connection error:', error);
+    process.exit(1);
+  });
 
-  if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-      serverSelectionTimeoutMS: 5000,
-    };
-
-    cached.promise = await mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      console.log('MongoDB connected to host:', mongoose.connection.host);
-      return mongoose;
-    });
-  }
-
-  cached.conn = await cached.promise;
-  
-  return cached.conn;
-  
+  return mongoose;
 }
 
 export default connectDB;
