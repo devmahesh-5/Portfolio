@@ -20,7 +20,7 @@ export default function RTE({ name, Control, label, defaultValue = "" }: RTEProp
                 defaultValue={defaultValue} // <-- set here only
                 render={({ field: { onChange, value } }) => (
                     <Editor
-                        apiKey={process.env.TINYMCE_API_KEY! || 'j8950u4ltrjsw7z9bgklvg3gksdivz62xu5xwew5s0bena93'}
+                        apiKey='j8950u4ltrjsw7z9bgklvg3gksdivz62xu5xwew5s0bena93'
                         value={value} // controlled content
                         init={{
                             height: 500,

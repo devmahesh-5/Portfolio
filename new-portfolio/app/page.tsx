@@ -79,7 +79,7 @@ export default  function Home() {
       title: "Sikshya Kendra",
       description: "An educational website offering a wide range of courses and resources to help students achieve their educational goals.Offers online Courses with in app tutoring and live classes.",
       tech: ["Next Js", "Node.js", "MongoDB", "Websockets", "Express", "JWT Auth", "Tailwind CSS"],
-      liveDemo: "https://sikshyakendra.onrender.com/",
+      liveDemo: "https://sikshya-kendra.onrender.com/",
       image: "/sk.png"
     },
     {
@@ -135,6 +135,7 @@ export default  function Home() {
       "Node.js",
       "Express",
       "MongoDB",
+      "PostgreSQL",
       "RESTful APIs",
       "Next.js"
     ],

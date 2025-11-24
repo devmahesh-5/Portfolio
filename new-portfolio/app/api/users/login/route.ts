@@ -2,7 +2,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import connectDB from "@/lib/db";
 import User from "@/models/users.models";
-import axios from "axios";
 
 connectDB();
 // const generateToken=async(user:any)=>{
