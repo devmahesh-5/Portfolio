@@ -25,35 +25,32 @@ export async function POST(request: NextRequest) {
     try {
         const { email, password } = await request.json();
 
-        if ([email,password].some(field => !field)) {
+        if ([email].some(field => !field)) {
             throw new Error("All fields are required");
         }
 
         const user = await User.findOne({ email });
+
         if (!user) {
             throw new Error("User not found");
         }
-        const isPasswordCorrect = await user.isPasswordCorrect(password);
 
-        if (!isPasswordCorrect) {
-            throw new Error("Invalid password");
-        }
+        // const isPasswordCorrect = await user.isPasswordCorrect(password);
+
+        // if (!isPasswordCorrect) {
+        //     throw new Error("Invalid password");
+        // }
 
         const newUser = await User.findById(user._id).select("-password -__v");
-        const accessToken = await newUser.generateAccessToken();
 
+        newUser.password = password;
         
-        //const refreshToken = await newUser.generateRefreshToken();
+        await newUser.save();
+        
 
-        if (!accessToken) {
-            throw new Error("Could not Log in user");
-        }
-
-      
-
-        const response = NextResponse.json(
+        return NextResponse.json(
             {
-                message: "Login successful",
+                message: "User updated successful",
                 success: true,
                 user: newUser
             },
@@ -63,18 +60,7 @@ export async function POST(request: NextRequest) {
         );
 
 
-        response.cookies.set({
-            name: "accessToken",
-            value: accessToken,
-            httpOnly: true,
-            sameSite: "lax",
-            path: "/",
-            maxAge: 60*60*24
-        });
-
-        
-
-        return response;
+       
 
     } catch (error: unknown) {
         console.log(error);

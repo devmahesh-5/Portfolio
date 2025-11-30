@@ -136,7 +136,7 @@ export default function BlogPostPage() {
 
   return (
     <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6] pt-20">
-      <div className="container mx-auto px-6 py-8 max-w-4xl">
+      <div className="container mx-auto px-6 py-8 max-w-6xl">
         {/* Back Button */}
         <Link 
           href="/blogs" 
@@ -165,7 +165,7 @@ export default function BlogPostPage() {
               </span>
               <span className="flex items-center gap-1">
                 <Clock size={14} />
-                {post?.readTime}
+                {post?.readTime} Read
               </span>
               <span className="flex items-center gap-1">
                 <Eye size={14} />

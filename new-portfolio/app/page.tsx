@@ -36,6 +36,19 @@ interface GitHubRepo {
   updated_at: string;
 }
 
+interface Blog {
+  _id: string;
+  title: string;
+  readTime: string;
+  content: string;
+  createdAt: string;
+  category: string;
+  tags: string[];
+  thumbnail: string;
+  author: string;
+  view: number;
+}
+
 interface userData {
   _id: string;
   fullName: string;
@@ -60,12 +73,14 @@ async function getGitHubRepos(): Promise<GitHubRepo[]> {
   }
 }
 
+
 export default  function Home() {
   const authStatus = useSelector((state: { auth: { status: boolean; userData: userData; } }) => state.auth.status);
   const dispatch = useDispatch();
   const userData: userData = useSelector((state: { auth: { status: boolean; userData: userData; }; }) => state.auth.userData);
   const [isMobile, setIsMobile] = React.useState(false);
   const [githubRepos, setGithubRepos] = React.useState<GitHubRepo[]>([]);
+  const [blogs, setBlogs] = React.useState<Blog[]>([]);
   const fetchGithub = async () =>{
     const githubRepos = await getGitHubRepos();
     setGithubRepos(githubRepos);
@@ -74,12 +89,31 @@ export default  function Home() {
     fetchGithub();
   }, []);
 
+
+    const fetchPosts = async () => {
+    try {
+      const response = await axios.get(`/api/blogs?page=1`);
+      const blogData = response.data.blog || [];
+      const total = response.data.total || 0;
+      
+      setBlogs(blogData);
+      
+    } catch (error: unknown) {
+      console.error("Error fetching blog posts:", error);
+    } 
+  };
+
+  React.useEffect(() => {
+    fetchPosts();
+  }, []);
+
+
   const projects = [
     {
       title: "Sikshya Kendra",
       description: "An educational website offering a wide range of courses and resources to help students achieve their educational goals.Offers online Courses with in app tutoring and live classes.",
       tech: ["Next Js", "Node.js", "MongoDB", "Websockets", "Express", "JWT Auth", "Tailwind CSS"],
-      liveDemo: "https://sikshya-kendra.onrender.com/",
+      liveDemo: "https://sikshyakendra.com/",
       image: "/sk.png"
     },
     {
@@ -346,6 +380,9 @@ export default  function Home() {
           </div>
         </div>
       </section>
+
+
+
 
       {/* CV Section - Enhanced */}
       <section id="cv" className="py-20 px-6 bg-[#0a192f]">
@@ -621,7 +658,7 @@ export default  function Home() {
      
 
       <section id="skills" className="py-20 px-6 bg-[#112240]">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-6xl">
           <h2 className="text-3xl font-bold text-[#ccd6f6] mb-12 relative">
             <span className="text-[#64ffda] text-2xl mr-2 font-mono">04.</span>
             Skills & Technologies
@@ -677,10 +714,71 @@ export default  function Home() {
         </div>
       </section>
 
-       <section id="Experience" className="py-20 px-6 bg-[#112240]">
-        <div className="container mx-auto max-w-4xl">
+
+       <section id="blogs" className="py-20 px-6 bg-[#112240]">
+        <div className="container mx-auto max-w-6xl">
           <h2 className="text-3xl font-bold text-[#ccd6f6] mb-12 relative">
             <span className="text-[#64ffda] text-2xl mr-2 font-mono">05.</span>
+            Latest From My Blog
+            <div className="absolute bottom-0 left-0 w-24 h-0.5 bg-[#64ffda]"></div>
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {blogs.slice(0, 4).map((blog) => (
+              <div key={blog._id} className="bg-[#0a192f] rounded-2xl overflow-hidden border border-[#233554] hover:border-[#64ffda]/50 transition-all duration-300 group">
+                
+                {/* Thumbnail */}
+                {blog.thumbnail && (
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={blog.thumbnail}
+                      alt={blog.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                )}
+
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-[#ccd6f6] mb-2 group-hover:text-[#64ffda] transition-colors">{blog.title}</h3>
+                  <p className="text-[#64ffda] text-xs mb-3 font-mono flex items-center gap-2">
+                    <Calendar size={14} />
+                    {blog.readTime}
+                  </p>
+                  
+                  {/* Render HTML content preview */}
+                  <div
+                    className="text-[#8892b0] text-sm mb-4 line-clamp-3"
+                    dangerouslySetInnerHTML={{ __html: blog.content }}
+                  ></div>
+
+                  <Link
+                    href={`/blogs/${blog._id}`}
+                    className="inline-flex items-center gap-2 text-[#64ffda] hover:text-[#64ffda]/80 transition-colors text-sm font-mono"
+                  >
+                    Read More
+                    <ExternalLink size={14} />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* View All Blogs Button */}
+          <div className="flex justify-center mt-8">
+            <Link
+              href="/blogs"
+              className="bg-transparent border border-[#64ffda] text-[#64ffda] py-3 px-8 rounded-lg text-sm font-mono hover:bg-[#64ffda]/10 transition-all duration-200"
+            >
+              View All Blogs
+            </Link>
+          </div>
+        </div>
+      </section>
+
+       <section id="Experience" className="py-20 px-6 bg-[#112240]">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl font-bold text-[#ccd6f6] mb-12 relative">
+            <span className="text-[#64ffda] text-2xl mr-2 font-mono">06.</span>
             Experence & Certifications
             <div className="absolute bottom-0 left-0 w-24 h-0.5 bg-[#64ffda]"></div>
           </h2>
