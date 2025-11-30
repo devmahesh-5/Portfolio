@@ -4,6 +4,7 @@ import { ArrowLeft, Calendar, Clock, User, Eye, Share2, Tag,Edit } from 'lucide-
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 
 interface BlogPost {
   _id: string;
@@ -27,7 +28,7 @@ export default function BlogPostPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [hasIncreasedViews, setHasIncreasedViews] = useState(false);
-
+  const authStatus = useSelector((state: { auth: { status: boolean; } }) => state.auth.status);
   useEffect(() => {
     if (!id) return;
 
@@ -188,13 +189,13 @@ export default function BlogPostPage() {
                 <p className="text-[#8892b0] text-sm">Full Stack Developer</p>
               </div>
             </div>
-            <button 
+            {authStatus && (<button 
               onClick={()=>router.push(`/blogs/edit/${post?._id}`)}
               className="flex items-center gap-2 border border-[#233554] text-[#8892b0] px-4 py-2 rounded-lg hover:border-[#64ffda] hover:text-[#64ffda] transition-colors"
             >
               <Edit size={16} />
               Edit
-            </button>
+            </button>)}
 
             <button 
               onClick={handleShare}
