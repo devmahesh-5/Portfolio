@@ -107,16 +107,37 @@ export default function BlogPostPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6] pt-20">
-        <div className="container mx-auto px-6 py-12 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#64ffda] mx-auto"></div>
-          <p className="mt-4 text-[#8892b0]">Loading blog post...</p>
+if (loading) {
+  return (
+    <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6] pt-32 px-6">
+      <div className="container mx-auto max-w-4xl">
+        
+        {/* Skeleton header */}
+        <div className="text-center mb-12">
+          <div className="h-10 w-40 bg-[#112240] mx-auto rounded-md animate-pulse"></div>
+          <div className="h-4 w-64 bg-[#112240] mx-auto mt-4 rounded-md animate-pulse"></div>
         </div>
+
+        {/* Skeleton posts list */}
+        <div className="space-y-10">
+          {[1, 2, 3].map((item) => (
+            <div
+              key={item}
+              className="p-6 border border-[#112240] rounded-xl bg-[#0a192f] animate-pulse"
+            >
+              <div className="h-48 w-full bg-[#112240] rounded-md mb-6"></div>
+
+              <div className="h-6 w-3/4 bg-[#112240] rounded-md mb-4"></div>
+              <div className="h-4 w-full bg-[#112240] rounded-md mb-2"></div>
+              <div className="h-4 w-5/6 bg-[#112240] rounded-md"></div>
+            </div>
+          ))}
+        </div>
+
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (error || !post) {
     return (
@@ -136,161 +157,179 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6] pt-20">
-      <div className="container mx-auto px-6 py-8 max-w-6xl">
-        {/* Back Button */}
-        <Link 
-          href="/blogs" 
-          className="inline-flex items-center gap-2 text-[#64ffda] hover:text-[#64ffda]/80 transition-colors mb-8 font-mono"
-        >
-          <ArrowLeft size={20} />
-          Back to Blogs
-        </Link>
+  <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6] pt-20">
+    <div className="container mx-auto px-4 sm:px-6 py-6 md:max-w-4xl lg:max-w-6xl">
+      
+      {/* Back Button */}
+      <Link 
+        href="/blogs" 
+        className="inline-flex items-center gap-2 text-[#64ffda] hover:text-[#64ffda]/80 transition-colors mb-6 font-mono text-sm sm:text-base"
+      >
+        <ArrowLeft size={18} />
+        Back to Blogs
+      </Link>
 
-        {/* Article Header */}
-        <article className="bg-[#112240] rounded-2xl p-8 border border-[#233554]">
-          <div className="flex items-center gap-4 mb-6">
-            <span className="bg-[#64ffda] text-[#0a192f] px-3 py-1 rounded-full text-sm font-mono font-semibold">
-              {post?.category}
+      {/* Article */}
+      <article className="bg-[#112240] rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-[#233554]">
+
+        {/* Category + Meta */}
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-5">
+          <span className="bg-[#64ffda] text-[#0a192f] px-3 py-1 rounded-full text-xs sm:text-sm font-mono font-semibold">
+            {post?.category}
+          </span>
+
+          <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-[#8892b0]">
+            <span className="flex items-center gap-1">
+              <Calendar size={14} />
+              {post?.createdAt
+                ? new Date(post.createdAt).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })
+                : ''}
             </span>
-            <div className="flex items-center gap-4 text-sm text-[#8892b0]">
-              <span className="flex items-center gap-1">
-                <Calendar size={14} />
-                {post?.createdAt
-                  ? new Date(post.createdAt).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })
-                  : ''}
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock size={14} />
-                {post?.readTime} Read
-              </span>
-              <span className="flex items-center gap-1">
-                <Eye size={14} />
-                {post?.view || 0} views
-              </span>
+
+            <span className="flex items-center gap-1">
+              <Clock size={14} />
+              {post?.readTime} Read
+            </span>
+
+            <span className="flex items-center gap-1">
+              <Eye size={14} />
+              {post?.view || 0} views
+            </span>
+          </div>
+        </div>
+
+        {/* Title */}
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#ccd6f6] mb-5 leading-snug">
+          {post?.title}
+        </h1>
+
+        {/* Author + Buttons */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          
+          {/* Author */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#64ffda]/20 rounded-full flex items-center justify-center">
+              <User size={20} className="text-[#64ffda]" />
+            </div>
+            <div>
+              <p className="text-[#ccd6f6] font-semibold">{post?.author}</p>
+              <p className="text-[#8892b0] text-xs sm:text-sm">Full Stack Developer</p>
             </div>
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-[#ccd6f6] mb-6">
-            {post?.title}
-          </h1>
-
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#64ffda]/20 rounded-full flex items-center justify-center">
-                <User size={20} className="text-[#64ffda]" />
-              </div>
-              <div>
-                <p className="text-[#ccd6f6] font-semibold">{post?.author}</p>
-                <p className="text-[#8892b0] text-sm">Full Stack Developer</p>
-              </div>
-            </div>
-            {authStatus && (<button 
-              onClick={()=>router.push(`/blogs/edit/${post?._id}`)}
-              className="flex items-center gap-2 border border-[#233554] text-[#8892b0] px-4 py-2 rounded-lg hover:border-[#64ffda] hover:text-[#64ffda] transition-colors"
-            >
-              <Edit size={16} />
-              Edit
-            </button>)}
+          {/* Buttons */}
+          <div className="flex items-center gap-3">
+            {authStatus && (
+              <button 
+                onClick={() => router.push(`/blogs/edit/${post?._id}`)}
+                className="flex items-center gap-2 border border-[#233554] text-[#8892b0] px-3 py-2 rounded-lg hover:border-[#64ffda] hover:text-[#64ffda] transition-colors text-sm"
+              >
+                <Edit size={16} />
+                Edit
+              </button>
+            )}
 
             <button 
               onClick={handleShare}
-              className="flex items-center gap-2 border border-[#233554] text-[#8892b0] px-4 py-2 rounded-lg hover:border-[#64ffda] hover:text-[#64ffda] transition-colors"
+              className="flex items-center gap-2 border border-[#233554] text-[#8892b0] px-3 py-2 rounded-lg hover:border-[#64ffda] hover:text-[#64ffda] transition-colors text-sm"
             >
               <Share2 size={16} />
               Share
             </button>
           </div>
+        </div>
 
-          {/* Featured Image */}
-          {post?.thumbnail && (
-            <div className="h-96 relative overflow-hidden rounded-xl mb-8">
-              <img
-                src={post.thumbnail}
-                alt={post?.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-
-          {/* Article Content */}
-          <div className="prose prose-invert max-w-none">
-            <div 
-              className="text-[#ccd6f6] leading-relaxed blog-content"
-              dangerouslySetInnerHTML={createMarkup(post?.content || '')}
+        {/* Thumbnail */}
+        {post?.thumbnail && (
+          <div className="relative overflow-hidden rounded-lg sm:rounded-xl mb-6 h-52 sm:h-72 md:h-96">
+            <img
+              src={post.thumbnail}
+              alt={post?.title}
+              className="w-full h-full object-cover"
             />
-          </div>
-
-          {/* Tags */}
-          {post?.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-8 pt-6 border-t border-[#233554]">
-              {post.tags.map((tag) => (
-                <span 
-                  key={tag}
-                  className="text-xs bg-[#64ffda]/10 text-[#64ffda] px-3 py-1 rounded-full border border-[#64ffda]/20"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </article>
-
-        {/* Related Posts */}
-        {relatedPosts?.length > 0 && (
-          <div className="mt-12">
-            <h2 className="text-2xl font-bold text-[#ccd6f6] mb-6 flex items-center gap-2">
-              <div className="w-2 h-2 bg-[#64ffda] rounded-full"></div>
-              Related Posts
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedPosts.map((relatedPost) => (
-                <Link
-                  key={relatedPost?._id}
-                  href={`/blogs/${relatedPost?._id}`}
-                  className="bg-[#112240] rounded-xl p-6 border border-[#233554] hover:border-[#64ffda]/50 transition-all duration-300 group"
-                >
-                  <h3 className="text-lg font-bold text-[#ccd6f6] mb-2 group-hover:text-[#64ffda] transition-colors line-clamp-2">
-                    {relatedPost?.title}
-                  </h3>
-                  <p className="text-[#8892b0] text-sm line-clamp-2 mb-3">
-                    {relatedPost?.content?.replace(/<[^>]*>/g, '').slice(0, 100)}...
-                  </p>
-                  <div className="flex items-center justify-between text-xs text-[#8892b0]">
-                    <span>{relatedPost?.readTime}</span>
-                    <span>{relatedPost?.view || 0} views</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
           </div>
         )}
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-between items-center mt-12 pt-6 border-t border-[#233554]">
-          <Link
-            href="/blogs"
-            className="inline-flex items-center gap-2 text-[#64ffda] hover:text-[#64ffda]/80 transition-colors font-mono"
-          >
-            <ArrowLeft size={16} />
-            Back to All Posts
-          </Link>
-          
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="text-[#64ffda] hover:text-[#64ffda]/80 transition-colors font-mono"
-          >
-            Back to Top
-          </button>
+        {/* Content */}
+        <div className="prose prose-invert max-w-none">
+          <div 
+            className="text-[#ccd6f6] leading-relaxed text-base sm:text-lg blog-content"
+            dangerouslySetInnerHTML={createMarkup(post?.content || '')}
+          />
         </div>
-      </div>
 
-      {/* Custom CSS for blog content styling */}
-      <style jsx global>{`
+        {/* Tags */}
+        {post?.tags?.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-8 pt-6 border-t border-[#233554]">
+            {post.tags.map((tag) => (
+              <span 
+                key={tag}
+                className="text-xs bg-[#64ffda]/10 text-[#64ffda] px-3 py-1 rounded-full border border-[#64ffda]/20"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </article>
+
+      {/* Related Posts */}
+      {relatedPosts?.length > 0 && (
+        <div className="mt-10 sm:mt-12">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#ccd6f6] mb-4 flex items-center gap-2">
+            <div className="w-2 h-2 bg-[#64ffda] rounded-full"></div>
+            Related Posts
+          </h2>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            {relatedPosts.map((relatedPost) => (
+              <Link
+                key={relatedPost?._id}
+                href={`/blogs/${relatedPost?._id}`}
+                className="bg-[#112240] rounded-lg p-5 sm:p-6 border border-[#233554] hover:border-[#64ffda]/50 transition-all duration-300 group"
+              >
+                <h3 className="text-base sm:text-lg font-bold text-[#ccd6f6] mb-2 group-hover:text-[#64ffda] transition-colors line-clamp-2">
+                  {relatedPost?.title}
+                </h3>
+
+                <p className="text-[#8892b0] text-sm line-clamp-2 mb-3">
+                  {relatedPost?.content?.replace(/<[^>]*>/g, '').slice(0, 100)}...
+                </p>
+
+                <div className="flex items-center justify-between text-xs text-[#8892b0]">
+                  <span>{relatedPost?.readTime}</span>
+                  <span>{relatedPost?.view || 0} views</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Footer Nav */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-10 sm:mt-12 pt-6 border-t border-[#233554] gap-4">
+        <Link
+          href="/blogs"
+          className="inline-flex items-center gap-2 text-[#64ffda] hover:text-[#64ffda]/80 transition-colors font-mono"
+        >
+          <ArrowLeft size={16} />
+          Back to All Posts
+        </Link>
+
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="text-[#64ffda] hover:text-[#64ffda]/80 transition-colors font-mono"
+        >
+          Back to Top
+        </button>
+      </div>
+    </div>
+
+     <style jsx global>{`
         .blog-content {
           line-height: 1.7;
           font-size: 1.125rem;
@@ -416,6 +455,7 @@ export default function BlogPostPage() {
           color: #8892b0;
         }
       `}</style>
-    </div>
-  );
+  </div>
+);
+
 }

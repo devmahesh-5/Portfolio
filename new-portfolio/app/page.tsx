@@ -108,15 +108,15 @@ export default  function Home() {
   }, []);
 
 
+
   const projects = [
     {
       title: "Sikshya Kendra",
       description: "An educational website offering a wide range of courses and resources to help students achieve their educational goals.Offers online Courses with in app tutoring and live classes.",
-      tech: ["Next Js", "Node.js", "MongoDB", "Websockets", "Express", "JWT Auth", "Tailwind CSS"],
       liveDemo: "https://sikshyakendra.com/",
       image: "/sk.png"
     },
-    {
+     {
       title: "RoomBazar",
       description: "A comprehensive room rental platform connecting tenants with property owners, featuring advanced search, secure authentication, and real-time communication.",
       tech: ["React", "Node.js", "MongoDB", "Express", "JWT Auth", "Tailwind CSS"],
@@ -181,12 +181,15 @@ export default  function Home() {
     ]
   };
 
+
+
   const certificates = [
     {
       title: "Locus Software Fellowship Instructor",
       image: "/instructor_locus.png",
       date: "2024"
-    }
+    },
+     
   ];
 
 
@@ -213,173 +216,223 @@ export default  function Home() {
   return (
     <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6]">
       {/* Header/Navigation */}
-      <header className={`fixed top-0 w-full bg-[#0a192f]/90 backdrop-blur-md z-50 border-b border-[#112240]`}>
+    <header
+  className="
+    fixed top-0 left-0 w-full z-50
+    bg-[#0a192f]/90 backdrop-blur-md border-b border-[#112240]
+  "
+>
   <div className="container mx-auto px-6 py-4">
-    <div className="flex justify-between items-center">
-      <Link href="/" className="text-2xl font-bold text-[#64ffda] hover:scale-105 transition-transform duration-200">
+    <div className="flex items-center justify-between">
+
+      {/* Logo */}
+      <Link
+        href="/"
+        className="text-2xl font-bold text-[#64ffda] transition-transform duration-200 hover:scale-105"
+      >
         M_B
       </Link>
 
+      {/* Desktop Navigation */}
+      <nav className="hidden md:flex items-center space-x-8">
+        {[
+          { label: "About", href: "#about" },
+          { label: "Freelancing & Projects", href: "#projects_freelancing" },
+          { label: "Skills", href: "#skills" },
+          { label: "Blogs", href: "/blogs" },
+          { label: "Contact", href: "#contact" },
+        ].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="
+              relative text-sm text-[#ccd6f6] transition-colors 
+              hover:text-[#64ffda] group
+            "
+          >
+            {item.label}
+            <span
+              className="
+                absolute left-0 -bottom-1 h-0.5 w-0 bg-[#64ffda]
+                group-hover:w-full transition-all duration-300
+              "
+            />
+          </Link>
+        ))}
 
-
-      <nav className={`hidden md:flex space-x-8`}>
-        <Link href="#about" className="text-[#ccd6f6] hover:text-[#64ffda] transition-colors text-sm relative group">
-          About
-          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#64ffda] transition-all duration-300 group-hover:w-full"></span>
-        </Link>
-
-        <Link href="#projects" className="text-[#ccd6f6] hover:text-[#64ffda] transition-colors text-sm relative group">
-          Projects
-          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#64ffda] transition-all duration-300 group-hover:w-full"></span>
-        </Link>
-
-        <Link href="#skills" className="text-[#ccd6f6] hover:text-[#64ffda] transition-colors text-sm relative group">
-          Skills
-          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#64ffda] transition-all duration-300 group-hover:w-full"></span>
-        </Link>
-
-        <Link href="/blogs" className="text-[#ccd6f6] hover:text-[#64ffda] transition-colors text-sm relative group">
-          Blog
-          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#64ffda] transition-all duration-300 group-hover:w-full"></span>
-        </Link>
-
-        <Link href="#contact" className="text-[#ccd6f6] hover:text-[#64ffda] transition-colors text-sm relative group">
-          Contact
-          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#64ffda] transition-all duration-300 group-hover:w-full"></span>
-        </Link>
-
+        {/* Auth Button */}
         {!authStatus ? (
-          <Link href="/login" className="px-4 py-2 border border-[#64ffda] text-[#64ffda] rounded-lg hover:bg-[#64ffda] hover:text-[#0a192f] transition-all duration-200 text-sm font-medium">
+          <Link
+            href="/login"
+            className="
+              px-4 py-2 text-sm font-medium
+              border border-[#64ffda] text-[#64ffda] rounded-lg
+              transition-all duration-200
+              hover:bg-[#64ffda] hover:text-[#0a192f]
+            "
+          >
             Login
           </Link>
         ) : (
-          <button onClick={handleLogout} className="px-4 py-2 bg-[#64ffda] text-[#0a192f] rounded-lg hover:bg-[#64ffda]/90 hover:shadow-lg hover:shadow-[#64ffda]/20 transition-all duration-200 text-sm font-medium">
+          <button
+            onClick={handleLogout}
+            className="
+              px-4 py-2 text-sm font-medium rounded-lg
+              bg-[#64ffda] text-[#0a192f]
+              transition-all duration-200
+              hover:bg-[#64ffda]/90 hover:shadow-lg hover:shadow-[#64ffda]/20
+            "
+          >
             Logout
           </button>
         )}
       </nav>
 
-      <button 
-  onClick={() => setIsMobile(!isMobile)} 
-  className="md:hidden flex flex-col items-center justify-center w-10 h-10 rounded-lg transition-all duration-300 group hover:shadow-lg hover:shadow-[#64ffda]/20"
-  aria-label="Toggle menu"
->
-  <span className={`w-6 h-0.5 bg-[#64ffda] rounded-full transition-all duration-300 ${
-    isMobile ? 'rotate-45 translate-y-1.5 bg-gradient-to-r from-[#64ffda] to-[#64ffda]/80' : 'group-hover:bg-gradient-to-r from-[#64ffda] to-[#64ffda]/80'
-  }`}></span>
-  <span className={`w-6 h-0.5 bg-[#64ffda] rounded-full transition-all duration-300 my-1.5 ${
-    isMobile ? 'opacity-0 -translate-x-2' : 'group-hover:bg-gradient-to-r from-[#64ffda] to-[#64ffda]/80'
-  }`}></span>
-  <span className={`w-6 h-0.5 bg-[#64ffda] rounded-full transition-all duration-300 ${
-    isMobile ? '-rotate-45 -translate-y-1.5 bg-gradient-to-r from-[#64ffda] to-[#64ffda]/80' : 'group-hover:bg-gradient-to-r from-[#64ffda] to-[#64ffda]/80'
-  }`}></span>
-</button>
+      {/* Mobile Hamburger */}
+      <button
+        onClick={() => setIsMobile(!isMobile)}
+        aria-label="Toggle menu"
+        className="
+          md:hidden w-10 h-10 flex flex-col items-center justify-center 
+          rounded-lg transition-all duration-300 group
+        "
+      >
+        <span
+          className={`
+            w-6 h-0.5 bg-[#64ffda] rounded-full transition-all duration-300
+            ${isMobile ? "rotate-45 translate-y-1.5" : "group-hover:bg-[#64ffda]"}
+          `}
+        />
+        <span
+          className={`
+            w-6 h-0.5 bg-[#64ffda] my-1.5 rounded-full transition-all duration-300
+            ${isMobile ? "opacity-0 -translate-x-2" : ""}
+          `}
+        />
+        <span
+          className={`
+            w-6 h-0.5 bg-[#64ffda] rounded-full transition-all duration-300
+            ${isMobile ? "-rotate-45 -translate-y-1.5" : ""}
+          `}
+        />
+      </button>
     </div>
   </div>
- {isMobile && (
-  <nav className="md:hidden absolute top-full left-0 w-full bg-[#0a192f] border-b border-[#64ffda]/20 shadow-2xl shadow-[#64ffda]/10">
-    <div className="container mx-auto px-4 py-2">
-      <Link 
-        href="#about" 
-        className="flex items-center gap-3 px-4 py-4 text-[#ccd6f6] hover:text-[#64ffda] hover:bg-[#112240] rounded-lg transition-all duration-300 text-base font-medium border-l-2 border-transparent hover:border-[#64ffda] group"
-        onClick={handleLinkClick}
-      >
-        <div className="w-1.5 h-1.5 bg-[#64ffda] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        About
-      </Link>
 
-      <Link 
-        href="#projects" 
-        className="flex items-center gap-3 px-4 py-4 text-[#ccd6f6] hover:text-[#64ffda] hover:bg-[#112240] rounded-lg transition-all duration-300 text-base font-medium border-l-2 border-transparent hover:border-[#64ffda] group"
-        onClick={handleLinkClick}
-      >
-        <div className="w-1.5 h-1.5 bg-[#64ffda] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        Projects
-      </Link>
+  {/* Mobile Menu */}
+  {isMobile && (
+    <nav
+      className="
+        md:hidden absolute top-full left-0 w-full
+        bg-[#0a192f] border-b border-[#64ffda]/20
+        shadow-xl shadow-[#64ffda]/10 animate-fade-in
+      "
+    >
+      <div className="container mx-auto px-4 py-3 space-y-1">
 
-      <Link 
-        href="#skills" 
-        className="flex items-center gap-3 px-4 py-4 text-[#ccd6f6] hover:text-[#64ffda] hover:bg-[#112240] rounded-lg transition-all duration-300 text-base font-medium border-l-2 border-transparent hover:border-[#64ffda] group"
-        onClick={handleLinkClick}
-      >
-        <div className="w-1.5 h-1.5 bg-[#64ffda] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        Skills
-      </Link>
-
-      <Link 
-        href="/blogs" 
-        className="flex items-center gap-3 px-4 py-4 text-[#ccd6f6] hover:text-[#64ffda] hover:bg-[#112240] rounded-lg transition-all duration-300 text-base font-medium border-l-2 border-transparent hover:border-[#64ffda] group"
-        onClick={handleLinkClick}
-      >
-        <div className="w-1.5 h-1.5 bg-[#64ffda] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        Blog
-      </Link>
-
-      <Link 
-        href="#contact" 
-        className="flex items-center gap-3 px-4 py-4 text-[#ccd6f6] hover:text-[#64ffda] hover:bg-[#112240] rounded-lg transition-all duration-300 text-base font-medium border-l-2 border-transparent hover:border-[#64ffda] group"
-        onClick={handleLinkClick}
-      >
-        <div className="w-1.5 h-1.5 bg-[#64ffda] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        Contact
-      </Link>
-
-      <div className="border-t border-[#112240] mt-2 pt-2">
-        {!authStatus ? (
-          <Link 
-            href="/login" 
-            className="flex items-center justify-center gap-2 px-4 py-4 mx-2 border border-[#64ffda] text-[#64ffda] rounded-lg hover:bg-[#64ffda] hover:text-[#0a192f] transition-all duration-300 text-base font-medium text-center"
+        {[
+          { label: "About", href: "#about" },
+          { label: "Freelancing & Projects", href: "#projects_freelancing" },
+          { label: "Skills", href: "#skills" },
+          { label: "Blog", href: "/blogs" },
+          { label: "Contact", href: "#contact" },
+        ].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
             onClick={handleLinkClick}
+            className="
+              flex items-center gap-3 px-4 py-4 rounded-lg
+              text-[#ccd6f6] hover:text-[#64ffda] hover:bg-[#112240]
+              border-l-2 border-transparent hover:border-[#64ffda]
+              transition-all duration-300 text-base font-medium group
+            "
           >
-            <span>Login</span>
+            <div
+              className="
+                w-1.5 h-1.5 bg-[#64ffda] rounded-full opacity-0 
+                group-hover:opacity-100 transition-opacity
+              "
+            />
+            {item.label}
           </Link>
-        ) : (
-          <button 
-            onClick={() => {
-              handleLogout();
-              handleLinkClick();
-            }}
-            className="w-full flex items-center justify-center gap-2 px-4 py-4 mx-2 bg-[#64ffda] text-[#0a192f] rounded-lg hover:bg-[#64ffda]/90 transition-all duration-300 text-base font-medium text-center"
-          >
-            <span>Logout</span>
-          </button>
-        )}
+        ))}
+
+        {/* Mobile Auth */}
+        <div className="pt-3 border-t border-[#112240]">
+          {!authStatus ? (
+            <Link
+              href="/login"
+              onClick={handleLinkClick}
+              className="
+                block text-center px-4 py-4 mx-2 border border-[#64ffda]
+                text-[#64ffda] rounded-lg text-base font-medium
+                hover:bg-[#64ffda] hover:text-[#0a192f]
+                transition-all duration-300
+              "
+            >
+              Login
+            </Link>
+          ) : (
+            <button
+              onClick={() => {
+                handleLogout();
+                handleLinkClick();
+              }}
+              className="
+                w-full mx-2 px-4 py-4 rounded-lg text-base font-medium
+                bg-[#64ffda] text-[#0a192f]
+                hover:bg-[#64ffda]/90 transition-all duration-300
+              "
+            >
+              Logout
+            </button>
+          )}
+        </div>
       </div>
-    </div>
-  </nav>
-)}
+    </nav>
+  )}
 </header>
 
-      {/* Hero Section */}
-      <section id="about" className="pt-32 pb-20 px-6">
-        <div className="container mx-auto max-w-4xl">
-          <p className="text-lg text-[#64ffda] mb-4 font-mono">Hi, my name is</p>
-          <h1 className="text-5xl md:text-7xl font-bold text-[#ccd6f6] mb-4">
-            Mahesh Bhandari.
-          </h1>
-          <h2 className="text-3xl md:text-5xl font-bold text-[#8892b0] mb-6">
-            I build fullstack web applications.
-          </h2>
-          <p className="text-xl text-[#8892b0] mb-8 max-w-2xl">
-            I'm a Computer Engineering student at Pulchowk Engineering Campus specializing in building exceptional digital experiences.
-            Currently focused on developing responsive web applications using the MERN stack.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <Link
-              href="#projects"
-              className="bg-transparent border border-[#64ffda] text-[#64ffda] px-8 py-3 rounded-lg hover:bg-[#64ffda]/10 transition-colors font-mono text-sm"
-            >
-              View My Projects
-            </Link>
-            <Link
-              href="#cv"
-              className="bg-transparent border border-[#ccd6f6] text-[#ccd6f6] px-8 py-3 rounded-lg hover:bg-[#ccd6f6]/10 transition-colors font-mono text-sm"
-            >
-              View CV
-            </Link>
-          </div>
-        </div>
-      </section>
+
+ {/* Hero Section */}
+<section id="about" className="pt-32 pb-20 px-6">
+  <div className="container mx-auto max-w-4xl">
+    <p className="text-lg text-[#64ffda] mb-4 font-mono">
+      Hi, my name is
+    </p>
+
+    <h1 className="text-5xl md:text-7xl font-bold text-[#ccd6f6] mb-4">
+      Mahesh Bhandari.
+    </h1>
+
+    <h2 className="text-3xl md:text-5xl font-bold text-[#8892b0] mb-6">
+      I build full-stack web and mobile apps, deploy them to the cloud, and keep everything running smoothly.
+    </h2>
+
+    <p className="text-xl text-[#8892b0] mb-8 max-w-2xl">
+      I&apos;m a Computer Engineering student at Pulchowk Engineering Campus who loves creating clean, practical, and reliable digital experiences. 
+      These days I&apos;m diving deeper into full-stack engineering, cloud systems, and devops.
+    </p>
+
+    <div className="flex flex-wrap gap-4">
+      <Link
+        href="#projects_freelancing"
+        className="bg-transparent border border-[#64ffda] text-[#64ffda] px-8 py-3 rounded-lg hover:bg-[#64ffda]/10 transition-colors font-mono text-sm"
+      >
+        View My Work
+      </Link>
+
+      <Link
+        href="#cv"
+        className="bg-transparent border border-[#ccd6f6] text-[#ccd6f6] px-8 py-3 rounded-lg hover:bg-[#ccd6f6]/10 transition-colors font-mono text-sm"
+      >
+        View CV
+      </Link>
+    </div>
+  </div>
+</section>
+
 
 
 
@@ -590,11 +643,11 @@ export default  function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 px-6 bg-[#0a192f]">
+      <section id="projects_freelancing" className="py-20 px-6 bg-[#0a192f]">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-3xl font-bold text-[#ccd6f6] mb-12 relative">
             <span className="text-[#64ffda] text-2xl mr-2 font-mono">03.</span>
-            Featured Projects
+            Freelancing & Projects
             <div className="absolute bottom-0 left-0 w-24 h-0.5 bg-[#64ffda]"></div>
           </h2>
 
@@ -638,7 +691,7 @@ export default  function Home() {
                   <h3 className="text-xl font-bold text-[#ccd6f6] mb-3">{project.title}</h3>
                   <p className="text-[#8892b0] mb-4">{project.description}</p>
                   <div className="flex flex-wrap gap-2">
-                    {project.tech.map((tech, techIndex) => (
+                    {(project?.tech ?? []).map((tech, techIndex) => (
                       <span
                         key={techIndex}
                         className="text-xs bg-[#64ffda]/10 text-[#64ffda] px-3 py-1 rounded-full border border-[#64ffda]/20 font-mono"

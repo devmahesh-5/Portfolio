@@ -96,16 +96,38 @@ export default function BlogsPage() {
     return pages;
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6] pt-20">
-        <div className="container mx-auto px-6 py-12 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#64ffda] mx-auto"></div>
-          <p className="mt-4 text-[#8892b0]">Loading blog posts...</p>
+if (loading) {
+  return (
+    <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6] pt-32 px-6">
+      <div className="container mx-auto max-w-4xl">
+        
+        {/* Skeleton header */}
+        <div className="text-center mb-12">
+          <div className="h-10 w-40 bg-[#112240] mx-auto rounded-md animate-pulse"></div>
+          <div className="h-4 w-64 bg-[#112240] mx-auto mt-4 rounded-md animate-pulse"></div>
         </div>
+
+        {/* Skeleton posts list */}
+        <div className="space-y-10">
+          {[1, 2, 3].map((item) => (
+            <div
+              key={item}
+              className="p-6 border border-[#112240] rounded-xl bg-[#0a192f] animate-pulse"
+            >
+              <div className="h-48 w-full bg-[#112240] rounded-md mb-6"></div>
+
+              <div className="h-6 w-3/4 bg-[#112240] rounded-md mb-4"></div>
+              <div className="h-4 w-full bg-[#112240] rounded-md mb-2"></div>
+              <div className="h-4 w-5/6 bg-[#112240] rounded-md"></div>
+            </div>
+          ))}
+        </div>
+
       </div>
-    );
-  }
+    </div>
+  );
+}
+
 
   if (error) {
     return (
@@ -148,15 +170,17 @@ export default function BlogsPage() {
     </Link>
   )}
 </div>
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold text-[#ccd6f6] mb-4">
-            Blog
-          </h1>
-          <p className="text-xl text-[#8892b0] max-w-2xl mx-auto">
-            Thoughts, tutorials, and insights about web development, programming, 
-            and my journey as a full-stack developer.
-          </p>
-        </div>
+       <div className="text-center mb-12">
+  <h1 className="text-4xl md:text-6xl font-bold text-[#ccd6f6] mb-4">
+    Blog
+  </h1>
+
+  <p className="text-xl text-[#8892b0] max-w-2xl mx-auto">
+    Notes, guides, and ideas around development, programming,
+    and the things I&apos;m learning as I grow as tech enthusiast.
+  </p>
+</div>
+
 
         {/* Categories Filter */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
