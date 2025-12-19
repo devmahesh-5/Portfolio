@@ -463,10 +463,10 @@ export default  function Home() {
                   </div>
                 </div>
               </div>
-              <button className="flex items-center gap-2 bg-[#64ffda] text-[#0a192f] px-6 py-3 rounded-lg hover:bg-[#64ffda]/90 transition-colors font-mono font-semibold">
+              <Link href='/Mahesh_Bhandari.pdf' className="flex items-center gap-2 bg-[#64ffda] text-[#0a192f] px-6 py-3 rounded-lg hover:bg-[#64ffda]/90 transition-colors font-mono font-semibold">
                 <Download size={20} />
                 Download CV
-              </button>
+              </Link>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8 mb-8">
