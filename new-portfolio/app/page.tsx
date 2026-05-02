@@ -189,6 +189,11 @@ export default  function Home() {
       image: "/instructor_locus.png",
       date: "2024"
     },
+    {
+      title:"Hack-A-Week Finalist 2026",
+      image:"/hack_aweek.png",
+      date:"2026"
+    }
      
   ];
 
@@ -451,7 +456,7 @@ export default  function Home() {
             <div className="flex flex-col lg:flex-row justify-between items-start mb-8 gap-6">
               <div className="flex-1">
                 <h1 className="text-4xl font-bold text-[#ccd6f6] mb-2">Mahesh Bhandari</h1>
-                <p className="text-xl text-[#64ffda] mb-4 font-mono">MERN Stack Developer</p>
+                <p className="text-xl text-[#64ffda] mb-4 font-mono">Full Stack Developer</p>
                 <div className="flex items-center gap-4 text-[#8892b0]">
                   <div className="flex items-center gap-2">
                     <MapPin size={16} />
@@ -463,7 +468,7 @@ export default  function Home() {
                   </div>
                 </div>
               </div>
-              <Link href='/Mahesh_Bhandari.pdf' className="flex items-center gap-2 bg-[#64ffda] text-[#0a192f] px-6 py-3 rounded-lg hover:bg-[#64ffda]/90 transition-colors font-mono font-semibold">
+              <Link href='/mahesh_cv.pdf' className="flex items-center gap-2 bg-[#64ffda] text-[#0a192f] px-6 py-3 rounded-lg hover:bg-[#64ffda]/90 transition-colors font-mono font-semibold">
                 <Download size={20} />
                 Download CV
               </Link>
@@ -530,7 +535,6 @@ export default  function Home() {
             {/* Skills Summary */}
             <div className="bg-[#0a192f] rounded-xl p-6 border border-[#233554]">
               <h3 className="text-2xl font-bold text-[#ccd6f6] mb-6 flex items-center gap-2">
-                <Sparkles size={24} className="text-[#64ffda]" />
                 Technical Skills
               </h3>
               <div className="grid md:grid-cols-3 gap-6">
