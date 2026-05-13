@@ -1,44 +1,50 @@
 import Blog from "@/models/blogs.models";
 import connectDB from "@/lib/db";
 import { NextResponse, NextRequest } from "next/server";
-import getDataFromToken from "@/lib/checkAuth";
-import { ApiError } from "@/lib/ApiError";
 
 connectDB();
 
-export async function GET(req: NextRequest) {
-    try {
-        const page = parseInt(req.nextUrl.searchParams.get("page") || "1");
-        
-
-        const blog = await Blog.find({}).sort({ createdAt: -1 }).limit(6).skip((page-1) * 10);
-
-        if(!blog) {
-            throw new ApiError(404, "blog not found");
-        }
-
-        return NextResponse.
-            json(
-                {
-                    message:
-                        "blog fetched successfully",
-                    blog
-                },
-                {
-                    status: 200
-
-                });
-
-    } catch (error: unknown) {
-        console.error("Error fetching blog:", error);
-        return NextResponse.
-            json({
-                message: error instanceof ApiError ? error.message : "Error fetching blog"
-            }, {
-                status: error instanceof ApiError ? error.statusCode : 500
-
-            });
-    }
+// Simple in-memory cache
+interface CacheEntry {
+  data: unknown;
+  timestamp: number;
 }
 
+let blogsCache: CacheEntry | null = null;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+export async function GET(req: NextRequest) {
+  try {
+    // Check cache first
+    if (blogsCache && Date.now() - blogsCache.timestamp < CACHE_TTL) {
+      return NextResponse.json(blogsCache.data, { status: 200 });
+    }
+
+    const page = parseInt(req.nextUrl.searchParams.get("page") || "1");
+    const limit = 6;
+
+    await connectDB();
+    const blog = await Blog.find({}).sort({ createdAt: -1 }).limit(limit).skip((page - 1) * limit);
+    const total = await Blog.countDocuments();
+
+    const responseData = {
+      message: "blog fetched successfully",
+      blog,
+      total,
+      page,
+      pages: Math.ceil(total / limit)
+    };
+
+    // Update cache
+    blogsCache = {
+      data: responseData,
+      timestamp: Date.now()
+    };
+
+    return NextResponse.json(responseData, { status: 200 });
+
+  } catch (error) {
+    console.error("Error fetching blog:", error);
+    return NextResponse.json({ message: "Error fetching blog" }, { status: 500 });
+  }
+}

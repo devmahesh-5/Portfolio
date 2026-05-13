@@ -20,7 +20,7 @@ export default function RTE({ name, Control, label, defaultValue = "" }: RTEProp
                 defaultValue={defaultValue}
                 render={({ field: { onChange, value } }) => (
                     <Editor
-                        apiKey='j8950u4ltrjsw7z9bgklvg3gksdivz62xu5xwew5s0bena93'
+                        apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
                         value={value}
                         onEditorChange={(content) => onChange(content)}
                         init={{

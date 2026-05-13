@@ -1,29 +1,28 @@
 'use client';
 import Link from 'next/link';
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
-import { login, logout } from '@/store/authSlice';
+import React, { useState, useEffect } from 'react';
 import {
   Github,
   Linkedin,
-  Twitter,
-  Facebook,
-  ExternalLink,
   Mail,
-  Download,
-  FileText,
+  Folder,
   Code,
-  Server,
-  Palette,
-  MapPin,
-  Calendar,
-  Award,
-  BookOpen,
-  Sparkles
+  FileText,
+  User,
+  Grid3X3,
+  Globe,
+  Search,
+  Settings,
+  Wifi,
+  Volume2,
+  Battery,
+  Cloud,
+  ArrowRight,
+  X,
+  ExternalLink,
 } from 'lucide-react';
+import axios from 'axios';
 
-// GitHub API types
 interface GitHubRepo {
   id: number;
   name: string;
@@ -38,6 +37,7 @@ interface GitHubRepo {
 
 interface Blog {
   _id: string;
+  slug: string;
   title: string;
   readTime: string;
   content: string;
@@ -49,853 +49,544 @@ interface Blog {
   view: number;
 }
 
-interface userData {
-  _id: string;
-  fullName: string;
-  email: string;
-}
+const projects = [
+  { title: "RoomBazar", description: "E-commerce Marketplace", image: "/room-bazar.png", liveDemo: "https://room-bazar.vercel.app/", tech: ["Next.js", "MongoDB", "JWT", "Tailwind"] },
+  { title: "Sikshya Kendra", description: "Educational Platform", image: "/sk.png", liveDemo: "https://sikshyakendra.com/", tech: ["React", "Node.js", "MongoDB"] },
+  { title: "Megablog", description: "Appwrite Backend Blog", image: "/mgblog.png", liveDemo: "http://appwrite-mega-blog-gamma.vercel.app", tech: ["React", "Appwrite", "Tailwind"] },
+  { title: "Tweet-Tube", description: "Twitter & YouTube Backend", image: "/tweet-tube.png", github: "https://github.com/devmahesh-5/Tweet-Tube", tech: ["Express", "MongoDB"] },
+  { title: "Mahesh'Keep", description: "Note Taking App", image: "/note.png", liveDemo: "https://devmahesh-5.github.io/Note/", tech: ["HTML", "CSS", "JavaScript"] },
+  { title: "Tent Sewing", description: "Business Website", image: "/tent.png", liveDemo: "https://devmahesh-5.github.io/Tent-Sewing-Enterprise/", tech: ["React", "Express", "MongoDB"] },
+];
 
-
-async function getGitHubRepos(): Promise<GitHubRepo[]> {
-  try {
-    const response = await fetch('https://api.github.com/users/devmahesh-5/repos?sort=updated&per_page=6', {
-      next: { revalidate: 3600 } // Cache for 1 hour
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch GitHub repos');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching GitHub repos:', error);
-    return [];
-  }
-}
-
-
-export default  function Home() {
-  const authStatus = useSelector((state: { auth: { status: boolean; userData: userData; } }) => state.auth.status);
-  const dispatch = useDispatch();
-  const userData: userData = useSelector((state: { auth: { status: boolean; userData: userData; }; }) => state.auth.userData);
-  const [isMobile, setIsMobile] = React.useState(false);
-  const [githubRepos, setGithubRepos] = React.useState<GitHubRepo[]>([]);
-  const [blogs, setBlogs] = React.useState<Blog[]>([]);
-  const fetchGithub = async () =>{
-    const githubRepos = await getGitHubRepos();
-    setGithubRepos(githubRepos);
-  }
-  React.useEffect(() => {
-    fetchGithub();
-  }, []);
-
-
-    const fetchPosts = async () => {
-    try {
-      const response = await axios.get(`/api/blogs?page=1`);
-      const blogData = response.data.blog || [];
-      const total = response.data.total || 0;
-      
-      setBlogs(blogData);
-      
-    } catch (error: unknown) {
-      console.error("Error fetching blog posts:", error);
-    } 
-  };
-
-  React.useEffect(() => {
-    fetchPosts();
-  }, []);
-
-
-
-  const projects = [
-    {
-      title: "Sikshya Kendra",
-      description: "An educational website offering a wide range of courses and resources to help students achieve their educational goals.Offers online Courses with in app tutoring and live classes.",
-      liveDemo: "https://sikshyakendra.com/",
-      image: "/sk.png"
-    },
-     {
-      title: "RoomBazar",
-      description: "A comprehensive room rental platform connecting tenants with property owners, featuring advanced search, secure authentication, and real-time communication.",
-      tech: ["React", "Node.js", "MongoDB", "Express", "JWT Auth", "Tailwind CSS"],
-      liveDemo: "https://room-bazar.vercel.app/",
-      image: "/room-bazar.png"
-    },
-    {
-      title: "Mahesh'Keep",
-      description: "A note-taking application built with React that allows users to create, edit, and organize notes with rich text formatting.",
-      tech: ["HTML", "CSS", "JavaScript", "Local Storage"],
-      github: "https://github.com/devmahesh-5/Note",
-      liveDemo: "https://devmahesh-5.github.io/Note/",
-      image: "/note.png"
-    },
-    {
-      title: "Tent Sewing Enterprises",
-      description: "An business website for a local tent manufacturing business featuring product listings and contact forms.",
-      tech: ["React", "Express", "MongoDB", "Tailwind CSS"],
-      github: "https://github.com/devmahesh-5/Tent-Sewing-Enterprise",
-      liveDemo: "https://devmahesh-5.github.io/Tent-Sewing-Enterprise/",
-      image: "/tent.png"
-    },
-    {
-      title: "Mega Blogging Platform",
-      description: "A full-featured blogging platform with user authentication, CRUD operations, and rich text editing using Appwrite backend.",
-      tech: ["React", "Appwrite", "Tailwind CSS"],
-      github: "https://github.com/devmahesh-5/Appwrite-MegaBlog",
-      liveDemo: "http://appwrite-mega-blog-gamma.vercel.app",
-      image: "/mgblog.png"
-    },
-    {
-      title: "Tweet-Tube",
-      description: "A Backend for a Twitter and YouTube Clone in one using Mongodb and Express JS.",
-      tech: ["Express", "MongoDB", "Postman"],
-      github: "https://github.com/devmahesh-5/Tweet-Tube",
-      liveDemo: "https://github.com/devmahesh-5/Tweet-Tube",
-      image: "/tweet-tube.png"
-    }
-  ];
-
-  const skills = {
-    frontend: [
-      "JavaScript (ES6+)",
-      "React",
-      "HTML5 & CSS3",
-      "Tailwind CSS",
-      "Next.js"
-    ],
-    backend: [
-      "Node.js",
-      "Express",
-      "MongoDB",
-      "PostgreSQL",
-      "RESTful APIs",
-      "Next.js"
-    ],
-    tools: [
-      "Git & GitHub",
-      "VS Code",
-      "Postman",
-      "Python"
-    ]
-  };
-
-
-
-  const certificates = [
-    {
-      title: "Locus Software Fellowship Instructor",
-      image: "/instructor_locus.png",
-      date: "2024"
-    },
-    {
-      title:"Hack-A-Week Finalist 2026",
-      image:"/hack_aweek.png",
-      date:"2026"
-    }
-     
-  ];
-
-
-  const handleLogout = async () => {
-    try {
-      const response = await axios.post('/api/users/logout');
-      dispatch(logout());
-    } catch (error:unknown) {
-      console.error("Error logging out:", error);
-    }
-
-
-  }
-
-  const handleLinkClick = () => {
-  // Small delay for better UX
-  setTimeout(() => {
-    setIsMobile(false);
-  }, 100);
+const skills = {
+  frontend: ["React", "Next.js", "TypeScript", "Tailwind CSS", "HTML5 & CSS3", "JavaScript"],
+  backend: ["Node.js", "Express", "MongoDB", "PostgreSQL", "RESTful APIs", "Redis"],
+  ai: ["Python", "LLMs", "RAG", "LangChain", "LangGraph", "AI Integration"],
+  tools: ["Git", "GitHub Actions", "Docker", "Postman", "VS Code", "Figma"],
 };
 
+export default function Home() {
+  const [activeSection, setActiveSection] = useState('about');
+  const [currentTime, setCurrentTime] = useState('');
+  const [currentDate, setCurrentDate] = useState('');
+  const [githubRepos, setGithubRepos] = useState<GitHubRepo[]>([]);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [contactStatus, setContactStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [isWindowOpen, setIsWindowOpen] = useState(false);
+  const [weather, setWeather] = useState<{ temp: number; condition: string; icon: string; location: string; cityName: string } | null>(null);
+  const [blogsCache, setBlogsCache] = useState<{ data: Blog[]; timestamp: number } | null>(null);
+  const BLOGS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+  useEffect(() => {
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    fetchGitHubRepos();
+    fetchWeather();
+    return () => clearInterval(timer);
+  }, []);
+
+  const updateTime = () => {
+    const now = new Date();
+    setCurrentTime(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }));
+    setCurrentDate(now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
+  };
+
+  const fetchGitHubRepos = async () => {
+    try {
+      const response = await fetch('https://api.github.com/users/devmahesh-5/repos?sort=updated&per_page=6', { next: { revalidate: 3600 } });
+      const data = await response.json();
+      setGithubRepos(data);
+    } catch (error) { console.error('Error fetching GitHub repos:', error); }
+  };
+
+  const fetchBlogs = async (forceRefresh = false) => {
+    try {
+      // Check local cache first
+      if (!forceRefresh && blogsCache && Date.now() - blogsCache.timestamp < BLOGS_CACHE_TTL) {
+        setBlogs(blogsCache.data);
+        return;
+      }
+
+      const response = await axios.get(`/api/blogs?page=1`);
+      const blogData = response.data.blog || [];
+      setBlogs(blogData);
+      setBlogsCache({ data: blogData, timestamp: Date.now() });
+    } catch (error) { console.error("Error fetching blog posts:", error); }
+  };
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchWeather = async () => {
+    try {
+      // Try user location first
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+      });
+      const { latitude, longitude } = position.coords;
+      const response = await fetch(`/api/weather?lat=${latitude}&lon=${longitude}`);
+      const data = await response.json();
+      setWeather({ temp: data.temp, condition: data.condition, icon: data.icon, location: data.location, cityName: data.cityName });
+    } catch {
+      // Fallback to Kathmandu
+      try {
+        const response = await fetch('/api/weather?city=Kathmandu');
+        const data = await response.json();
+        setWeather({ temp: data.temp, condition: data.condition, icon: data.icon, location: data.location, cityName: data.cityName });
+      } catch (error) { console.error("Weather fetch error:", error); }
+    }
+  };
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setContactStatus('sending');
+    setTimeout(() => {
+      setContactStatus('sent');
+      setContactForm({ name: '', email: '', message: '' });
+      setTimeout(() => setContactStatus('idle'), 3000);
+    }, 1500);
+  };
+
+  const filteredBlogs = searchQuery ? blogs.filter(blog =>
+    blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    blog.category.toLowerCase().includes(searchQuery.toLowerCase())
+  ) : blogs;
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'about': return <AboutSection />;
+      case 'projects': return <ProjectsSection projects={projects} />;
+      case 'skills': return <SkillsSection skills={skills} />;
+      case 'blog': return <BlogSection blogs={filteredBlogs} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />;
+      case 'contact': return <ContactSection form={contactForm} setForm={setContactForm} status={contactStatus} onSubmit={handleContactSubmit} />;
+      default: return <AboutSection />;
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-[#0a192f] text-[#ccd6f6]">
-      {/* Header/Navigation */}
-    <header
-  className="
-    fixed top-0 left-0 w-full z-50
-    bg-[#0a192f]/90 backdrop-blur-md border-b border-[#112240]
-  "
->
-  <div className="container mx-auto px-6 py-4">
-    <div className="flex items-center justify-between">
-
-      {/* Logo */}
-      <Link
-        href="/"
-        className="text-2xl font-bold text-[#64ffda] transition-transform duration-200 hover:scale-105"
-      >
-        M_B
-      </Link>
-
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center space-x-8">
-        {[
-          { label: "About", href: "#about" },
-          { label: "Freelancing & Projects", href: "#projects_freelancing" },
-          { label: "Skills", href: "#skills" },
-          { label: "Blogs", href: "/blogs" },
-          { label: "Contact", href: "#contact" },
-        ].map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="
-              relative text-sm text-[#ccd6f6] transition-colors 
-              hover:text-[#64ffda] group
-            "
-          >
-            {item.label}
-            <span
-              className="
-                absolute left-0 -bottom-1 h-0.5 w-0 bg-[#64ffda]
-                group-hover:w-full transition-all duration-300
-              "
-            />
-          </Link>
-        ))}
-
-        {/* Auth Button */}
-        {!authStatus ? (
-          <Link
-            href="/login"
-            className="
-              px-4 py-2 text-sm font-medium
-              border border-[#64ffda] text-[#64ffda] rounded-lg
-              transition-all duration-200
-              hover:bg-[#64ffda] hover:text-[#0a192f]
-            "
-          >
-            Login
-          </Link>
-        ) : (
-          <button
-            onClick={handleLogout}
-            className="
-              px-4 py-2 text-sm font-medium rounded-lg
-              bg-[#64ffda] text-[#0a192f]
-              transition-all duration-200
-              hover:bg-[#64ffda]/90 hover:shadow-lg hover:shadow-[#64ffda]/20
-            "
-          >
-            Logout
-          </button>
-        )}
-      </nav>
-
-      {/* Mobile Hamburger */}
-      <button
-        onClick={() => setIsMobile(!isMobile)}
-        aria-label="Toggle menu"
-        className="
-          md:hidden w-10 h-10 flex flex-col items-center justify-center 
-          rounded-lg transition-all duration-300 group
-        "
-      >
-        <span
-          className={`
-            w-6 h-0.5 bg-[#64ffda] rounded-full transition-all duration-300
-            ${isMobile ? "rotate-45 translate-y-1.5" : "group-hover:bg-[#64ffda]"}
-          `}
-        />
-        <span
-          className={`
-            w-6 h-0.5 bg-[#64ffda] my-1.5 rounded-full transition-all duration-300
-            ${isMobile ? "opacity-0 -translate-x-2" : ""}
-          `}
-        />
-        <span
-          className={`
-            w-6 h-0.5 bg-[#64ffda] rounded-full transition-all duration-300
-            ${isMobile ? "-rotate-45 -translate-y-1.5" : ""}
-          `}
-        />
-      </button>
-    </div>
-  </div>
-
-  {/* Mobile Menu */}
-  {isMobile && (
-    <nav
-      className="
-        md:hidden absolute top-full left-0 w-full
-        bg-[#0a192f] border-b border-[#64ffda]/20
-        shadow-xl shadow-[#64ffda]/10 animate-fade-in
-      "
-    >
-      <div className="container mx-auto px-4 py-3 space-y-1">
-
-        {[
-          { label: "About", href: "#about" },
-          { label: "Freelancing & Projects", href: "#projects_freelancing" },
-          { label: "Skills", href: "#skills" },
-          { label: "Blog", href: "/blogs" },
-          { label: "Contact", href: "#contact" },
-        ].map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={handleLinkClick}
-            className="
-              flex items-center gap-3 px-4 py-4 rounded-lg
-              text-[#ccd6f6] hover:text-[#64ffda] hover:bg-[#112240]
-              border-l-2 border-transparent hover:border-[#64ffda]
-              transition-all duration-300 text-base font-medium group
-            "
-          >
-            <div
-              className="
-                w-1.5 h-1.5 bg-[#64ffda] rounded-full opacity-0 
-                group-hover:opacity-100 transition-opacity
-              "
-            />
-            {item.label}
-          </Link>
-        ))}
-
-        {/* Mobile Auth */}
-        <div className="pt-3 border-t border-[#112240]">
-          {!authStatus ? (
-            <Link
-              href="/login"
-              onClick={handleLinkClick}
-              className="
-                block text-center px-4 py-4 mx-2 border border-[#64ffda]
-                text-[#64ffda] rounded-lg text-base font-medium
-                hover:bg-[#64ffda] hover:text-[#0a192f]
-                transition-all duration-300
-              "
-            >
-              Login
-            </Link>
-          ) : (
-            <button
-              onClick={() => {
-                handleLogout();
-                handleLinkClick();
-              }}
-              className="
-                w-full mx-2 px-4 py-4 rounded-lg text-base font-medium
-                bg-[#64ffda] text-[#0a192f]
-                hover:bg-[#64ffda]/90 transition-all duration-300
-              "
-            >
-              Logout
-            </button>
-          )}
-        </div>
+    <div className="min-h-screen relative bg-background">
+      {/* Background */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1a3a5f] via-[#121414] to-[#0c0f0f]"></div>
+        <div className="absolute top-0 left-0 right-0 h-96 bg-gradient-to-b from-[#0078d4]/20 to-transparent"></div>
       </div>
-    </nav>
-  )}
-</header>
 
-
- {/* Hero Section */}
-<section id="about" className="pt-32 pb-20 px-6">
-  <div className="container mx-auto max-w-4xl">
-    <p className="text-lg text-[#64ffda] mb-4 font-mono">
-      Hi, my name is
-    </p>
-
-    <h1 className="text-5xl md:text-7xl font-bold text-[#ccd6f6] mb-4">
-      Mahesh Bhandari.
-    </h1>
-
-    <h2 className="text-3xl md:text-5xl font-bold text-[#8892b0] mb-6">
-      I build full-stack web and mobile apps, deploy them to the cloud, and keep everything running smoothly.
-    </h2>
-
-    <p className="text-xl text-[#8892b0] mb-8 max-w-2xl">
-      I&apos;m a Computer Engineering student at Pulchowk Engineering Campus who loves creating clean, practical, and reliable digital experiences. 
-      These days I&apos;m diving deeper into full-stack engineering, cloud systems, and devops.
-    </p>
-
-    <div className="flex flex-wrap gap-4">
-      <Link
-        href="#projects_freelancing"
-        className="bg-transparent border border-[#64ffda] text-[#64ffda] px-8 py-3 rounded-lg hover:bg-[#64ffda]/10 transition-colors font-mono text-sm"
-      >
-        View My Work
-      </Link>
-
-      <Link
-        href="#cv"
-        className="bg-transparent border border-[#ccd6f6] text-[#ccd6f6] px-8 py-3 rounded-lg hover:bg-[#ccd6f6]/10 transition-colors font-mono text-sm"
-      >
-        View CV
-      </Link>
-    </div>
-  </div>
-</section>
-
-
-
-
-
-      {/* CV Section - Enhanced */}
-      <section id="cv" className="py-20 px-6 bg-[#0a192f]">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-[#ccd6f6] mb-12 relative">
-            <span className="text-[#64ffda] text-2xl mr-2 font-mono">01.</span>
-            Curriculum Vitae
-            <div className="absolute bottom-0 left-0 w-24 h-0.5 bg-[#64ffda]"></div>
-          </h2>
-
-          <div className="bg-[#112240] rounded-2xl shadow-2xl p-8 mb-8 border border-[#233554]">
-            {/* Header */}
-            <div className="flex flex-col lg:flex-row justify-between items-start mb-8 gap-6">
-              <div className="flex-1">
-                <h1 className="text-4xl font-bold text-[#ccd6f6] mb-2">Mahesh Bhandari</h1>
-                <p className="text-xl text-[#64ffda] mb-4 font-mono">Full Stack Developer</p>
-                <div className="flex items-center gap-4 text-[#8892b0]">
-                  <div className="flex items-center gap-2">
-                    <MapPin size={16} />
-                    <span>Syangja, Nepal</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail size={16} />
-                    <span>n31mahesh@gmail.com</span>
-                  </div>
-                </div>
-              </div>
-              <Link href='/mahesh_cv.pdf' className="flex items-center gap-2 bg-[#64ffda] text-[#0a192f] px-6 py-3 rounded-lg hover:bg-[#64ffda]/90 transition-colors font-mono font-semibold">
-                <Download size={20} />
-                Download CV
-              </Link>
-            </div>
-
-            <div className="grid lg:grid-cols-2 gap-8 mb-8">
-              {/* Education */}
-              <div className="bg-[#0a192f] rounded-xl p-6 border border-[#233554]">
-                <h3 className="text-2xl font-bold text-[#ccd6f6] mb-4 flex items-center gap-2">
-                  <BookOpen size={24} className="text-[#64ffda]" />
-                  Education
-                </h3>
-                <div className="space-y-4">
-                  <div className="border-l-2 border-[#64ffda] pl-4">
-                    <h4 className="font-semibold text-[#ccd6f6]">Bachelor in Computer Engineering</h4>
-                    <p className="text-[#64ffda]">Pulchowk Engineering Campus</p>
-                    <p className="text-[#8892b0] text-sm flex items-center gap-1">
-                      <Calendar size={14} />
-                      2023 - Present
-                    </p>
-                  </div>
-                  <div className="space-y-4">
-                  <div className="border-l-2 border-[#64ffda] pl-4">
-                    <h4 className="font-semibold text-[#ccd6f6]">+2 in Computer Science</h4>
-                    <p className="text-[#64ffda]">Himalayan Whitehouse Int&apos;l College</p>
-                    <p className="text-[#8892b0] text-sm flex items-center gap-1">
-                      <Calendar size={14} />
-                      2021 - 2023
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="border-l-2 border-[#64ffda] pl-4">
-                    <h4 className="font-semibold text-[#ccd6f6]">Secondary School</h4>
-                    <p className="text-[#64ffda]">Shree Gyanodaya Secondary School</p>
-                    <p className="text-[#8892b0] text-sm flex items-center gap-1">
-                      <Calendar size={14} />
-                      3.86
-                    </p>
-                  </div>
-                </div>
-                </div>
-              </div>
-
-              {/* Experience */}
-              {/* <div className="bg-[#0a192f] rounded-xl p-6 border border-[#233554]">
-                <h3 className="text-2xl font-bold text-[#ccd6f6] mb-4 flex items-center gap-2">
-                  <Award size={24} className="text-[#64ffda]" />
-                  Experience
-                </h3>
-                <div className="space-y-4">
-                  {experience && experience?.map((exp: Experience, index: number) => (
-                    <div key={index} className="border-l-2 border-[#64ffda] pl-4">
-                      <h4 className="font-semibold text-[#ccd6f6]">{exp.role}</h4>
-                      <p className="text-[#64ffda]">{exp.company}</p>
-                      <p className="text-[#8892b0] text-sm">{exp.period}</p>
-                      <p className="text-[#8892b0] text-sm mt-2">{exp.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </div> */}
-            </div>
-
-            {/* Skills Summary */}
-            <div className="bg-[#0a192f] rounded-xl p-6 border border-[#233554]">
-              <h3 className="text-2xl font-bold text-[#ccd6f6] mb-6 flex items-center gap-2">
-                Technical Skills
-              </h3>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="flex items-start gap-3">
-                  <Palette size={20} className="text-[#64ffda] mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-[#ccd6f6] mb-2">Frontend</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {skills.frontend.map((skill, index) => (
-                        <span key={index} className="text-xs bg-[#64ffda]/10 text-[#64ffda] px-3 py-1 rounded-full border border-[#64ffda]/20">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Server size={20} className="text-[#64ffda] mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-[#ccd6f6] mb-2">Backend</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {skills.backend.map((skill, index) => (
-                        <span key={index} className="text-xs bg-[#64ffda]/10 text-[#64ffda] px-3 py-1 rounded-full border border-[#64ffda]/20">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Code size={20} className="text-[#64ffda] mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-[#ccd6f6] mb-2">Tools & Others</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {skills.tools.map((skill, index) => (
-                        <span key={index} className="text-xs bg-[#64ffda]/10 text-[#64ffda] px-3 py-1 rounded-full border border-[#64ffda]/20">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      {/* Always visible sidebar - Weather & Profile only */}
+      <aside className="fixed right-4 top-20 z-30 w-64 bg-surface-container-high/60 backdrop-blur-xl rounded-xl border border-white/5 p-4 hidden lg:flex flex-col gap-4">
+        {/* User Profile */}
+        <div className="flex items-center gap-3 px-2">
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-primary-container">
+            <img src="/my-photo.png" alt="Mahesh Bhandari" className="w-full h-full object-cover" />
+          </div>
+          <div>
+            <p className="font-semibold text-on-surface text-sm">Mahesh Bhandari</p>
+            <p className="text-xs text-on-surface-variant">Undergraduate at Pulchowk</p>
           </div>
         </div>
-      </section>
 
-      {/* GitHub Activity Section */}
-      <section id="github" className="py-20 px-6 bg-[#112240]">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-[#ccd6f6] mb-12 relative">
-            <span className="text-[#64ffda] text-2xl mr-2 font-mono">02.</span>
-            Latest GitHub Activity
-            <div className="absolute bottom-0 left-0 w-24 h-0.5 bg-[#64ffda]"></div>
-          </h2>
+        {/* Weather Widget */}
+        {weather && (
+          <div className="p-3 bg-surface-variant/20 rounded-lg border border-white/5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-lg font-bold text-on-surface">{weather.temp}°C</p>
+                <p className="text-xs text-on-surface-variant">{weather.cityName}</p>
+              </div>
+              <span className="text-2xl">{weather.icon}</span>
+            </div>
+          </div>
+        )}
+      </aside>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {githubRepos.map((repo) => (
-              <div key={repo.id} className="bg-[#0a192f] rounded-xl p-6 border border-[#233554] hover:border-[#64ffda]/50 transition-all duration-300 hover:transform hover:-translate-y-2">
-                <div className="flex justify-between items-start mb-3">
-                  <h3 className="text-lg font-semibold text-[#ccd6f6] truncate flex-1">
-                    {repo.name}
-                  </h3>
-                  <Link
-                    href={repo.html_url}
-                    target="_blank"
-                    className="text-[#8892b0] hover:text-[#64ffda] transition-colors ml-2"
-                  >
-                    <Github size={18} />
-                  </Link>
+      {/* Desktop Icons (Windows Style) */}
+      {!isWindowOpen && (
+        <div className="relative z-30 p-4 md:p-6 lg:p-8 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-5 pt-16 md:pt-20 mr-0 lg:mr-72">
+          <button onClick={() => { setActiveSection('about'); setIsWindowOpen(true); }} className="flex flex-col items-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-all group">
+            <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/30">
+              <User className="text-primary" size={24} />
+            </div>
+            <span className="text-xs text-white font-medium">About</span>
+          </button>
+          <button onClick={() => { setActiveSection('projects'); setIsWindowOpen(true); }} className="flex flex-col items-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-all group">
+            <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center border border-secondary/30">
+              <Folder className="text-secondary" size={24} />
+            </div>
+            <span className="text-xs text-white font-medium">Projects</span>
+          </button>
+          <button onClick={() => { setActiveSection('skills'); setIsWindowOpen(true); }} className="flex flex-col items-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-all group">
+            <div className="w-12 h-12 bg-tertiary/20 rounded-lg flex items-center justify-center border border-tertiary/30">
+              <Code className="text-tertiary" size={24} />
+            </div>
+            <span className="text-xs text-white font-medium">Skills</span>
+          </button>
+          <button onClick={() => { setActiveSection('blog'); setIsWindowOpen(true); }} className="flex flex-col items-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-all group">
+            <div className="w-12 h-12 bg-primary-container/20 rounded-lg flex items-center justify-center border border-primary-container/30">
+              <FileText className="text-primary-container" size={24} />
+            </div>
+            <span className="text-xs text-white font-medium">Blog</span>
+          </button>
+          <button onClick={() => { setActiveSection('contact'); setIsWindowOpen(true); }} className="flex flex-col items-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-all group">
+            <div className="w-12 h-12 bg-tertiary/20 rounded-lg flex items-center justify-center border border-tertiary/30">
+              <Mail className="text-tertiary" size={24} />
+            </div>
+            <span className="text-xs text-white font-medium">Contact</span>
+          </button>
+          <a href="/mahesh_cv.pdf" target="_blank" className="flex flex-col items-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-all group">
+            <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center border border-secondary/30">
+              <FileText className="text-secondary" size={24} />
+            </div>
+            <span className="text-xs text-white font-medium">My CV</span>
+          </a>
+        </div>
+      )}
+
+      {/* Main Window */}
+      {isWindowOpen && (
+        <main className="relative z-40 flex items-center justify-center min-h-screen p-2 md:p-4">
+          <div className="w-full max-w-7xl h-[90vh] md:h-[85vh] mica-surface rounded-xl window-shadow overflow-hidden flex flex-col light-catch">
+            {/* Top Bar - Windows style */}
+            <header className="flex justify-between items-center px-3 md:px-4 py-2 bg-surface-container-low/80 backdrop-blur-xl rounded-t-xl border-t border-white/10 cursor-default" style={{ WebkitAppRegion: 'drag' } as any}>
+              <div className="flex items-center gap-2 md:gap-3">
+                <button onClick={() => setActiveSection('about')} className="p-1 hover:bg-white/10 rounded transition-colors">
+                  <span className="material-symbols-outlined text-primary" style={{ fontSize: '16px' }}>home</span>
+                </button>
+                <span className="font-medium text-xs md:text-sm text-on-surface">Portfolio — {activeSection.charAt(0).toUpperCase() + activeSection.slice(1)}</span>
+              </div>
+              <div className="flex items-center" style={{ WebkitAppRegion: 'no-drag' } as any}>
+                <button onClick={() => setIsWindowOpen(false)} className="p-2 hover:bg-white/10 rounded transition-colors">
+                  <X size={16} className="text-on-surface-variant" />
+                </button>
+              </div>
+            </header>
+
+            {/* Content Area */}
+            <div className="flex flex-1 overflow-hidden">
+              {/* Sidebar */}
+              <aside className="hidden lg:flex w-72 bg-surface-container-high/60 backdrop-blur-xl border-r border-white/5 flex-col p-4 gap-1">
+                {/* User Profile */}
+                <div className="flex items-center gap-3 mb-6 px-2">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-primary-container">
+                    <img src="/my-photo.png" alt="Mahesh Bhandari" className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-on-surface text-base">Mahesh Bhandari</p>
+                    <p className="text-xs text-on-surface-variant">Undergraduate at Pulchowk</p>
+                  </div>
                 </div>
 
-                <p className="text-[#8892b0] text-sm mb-4 line-clamp-2">
-                  {repo.description || 'No description available'}
-                </p>
-
-                <div className="flex justify-between items-center text-xs text-[#8892b0]">
-                  <div className="flex items-center gap-4">
-                    {repo.language && (
-                      <span className="flex items-center gap-1">
-                        <div className="w-2 h-2 bg-[#64ffda] rounded-full"></div>
-                        {repo.language}
-                      </span>
-                    )}
-                    <span>⭐ {repo.stargazers_count}</span>
-                    <span>🍴 {repo.forks_count}</span>
-                  </div>
-                  {repo.homepage && (
-                    <Link
-                      href={repo.homepage}
-                      target="_blank"
-                      className="text-[#64ffda] hover:text-[#64ffda]/80 transition-colors"
+                {/* Navigation */}
+                <nav className="flex flex-col gap-1">
+                  {[
+                    { id: 'about', label: 'About', icon: User },
+                    { id: 'projects', label: 'Projects', icon: Folder },
+                    { id: 'skills', label: 'Skills', icon: Code },
+                    { id: 'blog', label: 'Blog', icon: FileText },
+                    { id: 'contact', label: 'Contact', icon: Mail },
+                  ].map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveSection(item.id)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm ${
+                        activeSection === item.id ? 'bg-primary-container text-on-primary-container' : 'text-on-surface-variant hover:bg-white/5'
+                      }`}
                     >
-                      <ExternalLink size={14} />
-                    </Link>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+                      <item.icon size={20} />
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
+                </nav>
 
-          {githubRepos.length === 0 && (
-            <div className="text-center text-[#8892b0] py-12">
-              <Github size={48} className="mx-auto mb-4 text-[#64ffda]" />
-              <p>Unable to load GitHub repositories</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects_freelancing" className="py-20 px-6 bg-[#0a192f]">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-[#ccd6f6] mb-12 relative">
-            <span className="text-[#64ffda] text-2xl mr-2 font-mono">03.</span>
-            Freelancing & Projects
-            <div className="absolute bottom-0 left-0 w-24 h-0.5 bg-[#64ffda]"></div>
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
-              <div key={index} className="bg-[#112240] rounded-2xl overflow-hidden border border-[#233554] hover:border-[#64ffda]/50 transition-all duration-300 group">
-                {/* Project Image Container */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a192f] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <div className="flex gap-3 w-full">
-                      {project.github && (
-                        <Link
-                          href={project.github}
-                          target="_blank"
-                          className="flex-1 bg-[#64ffda] text-[#0a192f] py-2 px-4 rounded text-center text-sm hover:bg-[#64ffda]/90 transition-colors font-mono font-semibold"
-                        >
-                          Code
-                        </Link>
-                      )}
-                      {project.liveDemo && (
-                        <Link
-                          href={project.liveDemo}
-                          target="_blank"
-                          className="flex-1 bg-transparent border border-[#64ffda] text-[#64ffda] py-2 px-4 rounded text-center text-sm hover:bg-[#64ffda]/10 transition-colors font-mono flex items-center justify-center gap-2"
-                        >
-                          <ExternalLink size={16} />
-                          Live
-                        </Link>
-                      )}
-                    </div>
+                {/* GitHub Latest Repos */}
+                <div className="mt-auto p-4 bg-surface-variant/20 rounded-xl border border-white/5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Github size={16} className="text-primary" />
+                    <span className="text-xs text-on-surface-variant font-medium">Latest Repos</span>
                   </div>
-                </div>
-
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-[#ccd6f6] mb-3">{project.title}</h3>
-                  <p className="text-[#8892b0] mb-4">{project.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {(project?.tech ?? []).map((tech, techIndex) => (
-                      <span
-                        key={techIndex}
-                        className="text-xs bg-[#64ffda]/10 text-[#64ffda] px-3 py-1 rounded-full border border-[#64ffda]/20 font-mono"
-                      >
-                        {tech}
-                      </span>
+                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                    {githubRepos.slice(0, 4).map((repo) => (
+                      <a key={repo.id} href={repo.html_url} target="_blank" className="flex items-center justify-between text-xs hover:bg-white/5 p-1 rounded group">
+                        <span className="text-on-surface truncate group-hover:text-primary">{repo.name}</span>
+                        <span className="text-secondary">⭐{repo.stargazers_count}</span>
+                      </a>
                     ))}
                   </div>
                 </div>
-              </div>
+              </aside>
+
+              {/* Main Content */}
+              <section className="flex-1 p-4 md:p-8 overflow-y-auto">
+                {renderContent()}
+              </section>
+            </div>
+          </div>
+        </main>
+      )}
+
+      {/* Taskbar */}
+      <nav className="fixed bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 md:gap-2 bg-surface-container/60 backdrop-blur-xl h-10 md:h-12 rounded-full px-2 md:px-4 border-t border-white/10 taskbar-shadow">
+        <button onClick={() => setIsWindowOpen(!isWindowOpen)} className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 hover:bg-white/5 rounded-lg transition-all duration-200">
+          <svg fill="#0078d4" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 12.1157V0L11.5303 1.58352V12.1157H0Z" />
+            <path d="M0 24V12.9818H11.5303V24L0 22.4165Z" />
+            <path d="M12.4697 1.7303V12.1157H24V0.0818176L12.4697 1.7303Z" />
+            <path d="M12.4697 12.9818V24L24 22.2521V12.9818H12.4697Z" />
+          </svg>
+        </button>
+
+        {isWindowOpen && (
+          <>
+            <div className="h-6 w-[1px] bg-white/10 mx-1 hidden md:block"></div>
+            <button onClick={() => setActiveSection('about')} className={`relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10 hover:bg-white/5 rounded-lg transition-all duration-200 active:scale-95 ${activeSection === 'about' ? 'text-primary' : 'text-on-surface-variant'}`}>
+              <Grid3X3 size={18} />
+              {activeSection === 'about' && <span className="absolute -bottom-0.5 w-1 h-1 bg-primary rounded-full"></span>}
+            </button>
+            <button onClick={() => setActiveSection('projects')} className={`relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10 hover:bg-white/5 rounded-lg transition-all duration-200 active:scale-95 ${activeSection === 'projects' ? 'text-primary' : 'text-on-surface-variant'}`}>
+              <Folder size={18} />
+              {activeSection === 'projects' && <span className="absolute -bottom-0.5 w-1 h-1 bg-primary rounded-full"></span>}
+            </button>
+            <button onClick={() => setActiveSection('blog')} className={`relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10 hover:bg-white/5 rounded-lg transition-all duration-200 active:scale-95 ${activeSection === 'blog' ? 'text-primary' : 'text-on-surface-variant'}`}>
+              <FileText size={18} />
+              {activeSection === 'blog' && <span className="absolute -bottom-0.5 w-1 h-1 bg-primary rounded-full"></span>}
+            </button>
+            <button onClick={() => setActiveSection('contact')} className={`relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10 hover:bg-white/5 rounded-lg transition-all duration-200 active:scale-95 ${activeSection === 'contact' ? 'text-primary' : 'text-on-surface-variant'}`}>
+              <Mail size={18} />
+              {activeSection === 'contact' && <span className="absolute -bottom-0.5 w-1 h-1 bg-primary rounded-full"></span>}
+            </button>
+          </>
+        )}
+
+        <div className="h-6 w-[1px] bg-white/10 mx-1 hidden md:block"></div>
+
+        {/* System Tray */}
+        <div className="flex items-center gap-2 md:gap-3 px-1 md:px-2 text-on-surface-variant">
+          {weather && (
+            <div className="flex items-center gap-1 text-xs">
+              <span>{weather.icon}</span>
+              <span className="hidden md:inline">{weather.temp}°C - {weather.cityName}</span>
+            </div>
+          )}
+          <Wifi size={14} />
+          <Volume2 size={14} />
+          <Battery size={14} />
+          <div className="flex flex-col items-end">
+            <span className="text-[10px] md:text-xs font-medium text-on-surface">{currentTime}</span>
+            <span className="text-[9px] md:text-[11px]">{currentDate}</span>
+          </div>
+        </div>
+      </nav>
+    </div>
+  );
+}
+
+// About Section
+function AboutSection() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-2 text-primary font-mono mb-4">
+        <span>$</span>
+        <span className="typing-effect">whoami</span>
+      </div>
+      <h2 className="text-3xl md:text-4xl font-bold text-on-surface mb-2">Mahesh Bhandari</h2>
+      <p className="text-lg md:text-xl text-secondary mb-6">Undergraduate Computer Engineering Student</p>
+      <p className="text-sm text-on-surface-variant mb-2">Pulchowk Engineering Campus, Lalitpur, Nepal</p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="acrylic-surface p-5 rounded-xl border border-white/5">
+          <div className="flex items-center gap-3 mb-4">
+            <Settings className="text-primary" size={24} />
+            <h3 className="font-semibold text-on-surface">System</h3>
+          </div>
+          <ul className="space-y-3 text-sm">
+            <li className="flex justify-between"><span className="text-on-surface-variant">Status</span><span className="text-on-surface">Student</span></li>
+            <li className="flex justify-between"><span className="text-on-surface-variant">Institution</span><span className="text-on-surface">Pulchowk Campus</span></li>
+            <li className="flex justify-between"><span className="text-on-surface-variant">Major</span><span className="text-on-surface">Computer Engineering</span></li>
+          </ul>
+        </div>
+
+        <div className="acrylic-surface p-5 rounded-xl border border-white/5">
+          <div className="flex items-center gap-3 mb-4">
+            <Code className="text-primary" size={24} />
+            <h3 className="font-semibold text-on-surface">Tech Stack</h3>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {['React', 'Next.js', 'Node.js', 'TypeScript', 'MongoDB', 'Tailwind'].map((tech) => (
+              <span key={tech} className="px-3 py-1 bg-surface-variant rounded-full text-xs text-on-surface-variant">{tech}</span>
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Skills Section */}
-     
+      <div className="acrylic-surface p-5 rounded-xl border border-white/5">
+        <p className="text-base text-on-surface-variant leading-relaxed">
+          Building high-performance digital experiences with a focus on polished UI/UX. Currently specializing in full-stack development and exploring AI/ML technologies. Pursuing Computer Engineering at Pulchowk Engineering Campus.
+        </p>
+      </div>
 
-      <section id="skills" className="py-20 px-6 bg-[#112240]">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-[#ccd6f6] mb-12 relative">
-            <span className="text-[#64ffda] text-2xl mr-2 font-mono">04.</span>
-            Skills & Technologies
-            <div className="absolute bottom-0 left-0 w-24 h-0.5 bg-[#64ffda]"></div>
-          </h2>
+      <div className="flex flex-wrap gap-3">
+        <a href="https://github.com/devmahesh-5" target="_blank" className="flex items-center gap-2 px-4 py-2 bg-primary-container text-on-primary-container rounded-lg hover:brightness-110 transition-all text-sm">
+          <Github size={18} />
+          <span>GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/mahesh-bhandari-b901a4312/" target="_blank" className="flex items-center gap-2 px-4 py-2 bg-surface-variant text-on-surface-variant rounded-lg hover:bg-white/10 transition-all text-sm">
+          <Linkedin size={18} />
+          <span>LinkedIn</span>
+        </a>
+        <a href="mailto:n31mahesh@gmail.com" className="flex items-center gap-2 px-4 py-2 bg-surface-variant text-on-surface-variant rounded-lg hover:bg-white/10 transition-all text-sm">
+          <Mail size={18} />
+          <span>Email</span>
+        </a>
+      </div>
+    </div>
+  );
+}
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-[#0a192f] rounded-2xl p-6 border border-[#233554] hover:border-[#64ffda]/50 transition-colors">
-              <h3 className="text-xl font-bold text-[#ccd6f6] mb-4 flex items-center gap-2">
-                <Palette size={20} className="text-[#64ffda]" />
-                Frontend
-              </h3>
-              <ul className="space-y-2">
-                {skills.frontend.map((skill, index) => (
-                  <li key={index} className="text-[#8892b0] flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#64ffda] rounded-full"></div>
-                    {skill}
-                  </li>
-                ))}
-              </ul>
+// Projects Section
+function ProjectsSection({ projects }: { projects: Array<{title: string, description: string, image?: string, liveDemo?: string, github?: string, tech?: string[]}> }) {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl md:text-3xl font-bold text-on-surface">Projects</h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        {projects.map((project, index) => (
+          <div key={index} className="group relative mica-surface rounded-xl p-5 border border-white/5 hover:border-primary/50 transition-all duration-300 flex flex-col gap-3 cursor-pointer hover:shadow-lg hover:shadow-primary/10">
+            <div className="w-14 h-14 rounded-lg bg-primary/20 flex items-center justify-center overflow-hidden">
+              {project.image ? <img src={project.image} alt={project.title} className="w-full h-full object-cover" /> : <Folder className="text-primary" size={28} />}
             </div>
-
-            <div className="bg-[#0a192f] rounded-2xl p-6 border border-[#233554] hover:border-[#64ffda]/50 transition-colors">
-              <h3 className="text-xl font-bold text-[#ccd6f6] mb-4 flex items-center gap-2">
-                <Server size={20} className="text-[#64ffda]" />
-                Backend
-              </h3>
-              <ul className="space-y-2">
-                {skills.backend.map((skill, index) => (
-                  <li key={index} className="text-[#8892b0] flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#64ffda] rounded-full"></div>
-                    {skill}
-                  </li>
-                ))}
-              </ul>
+            <div>
+              <h3 className="font-semibold text-on-surface group-hover:text-primary transition-colors">{project.title}</h3>
+              <p className="text-sm text-on-surface-variant mt-1">{project.description}</p>
             </div>
-
-            <div className="bg-[#0a192f] rounded-2xl p-6 border border-[#233554] hover:border-[#64ffda]/50 transition-colors">
-              <h3 className="text-xl font-bold text-[#ccd6f6] mb-4 flex items-center gap-2">
-                <Code size={20} className="text-[#64ffda]" />
-                Tools & Other
-              </h3>
-              <ul className="space-y-2">
-                {skills.tools.map((skill, index) => (
-                  <li key={index} className="text-[#8892b0] flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-[#64ffda] rounded-full"></div>
-                    {skill}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-       <section id="blogs" className="py-20 px-6 bg-[#112240]">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-[#ccd6f6] mb-12 relative">
-            <span className="text-[#64ffda] text-2xl mr-2 font-mono">05.</span>
-            Latest From My Blog
-            <div className="absolute bottom-0 left-0 w-24 h-0.5 bg-[#64ffda]"></div>
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {blogs.slice(0, 4).map((blog) => (
-              <div key={blog._id} className="bg-[#0a192f] rounded-2xl overflow-hidden border border-[#233554] hover:border-[#64ffda]/50 transition-all duration-300 group">
-                
-                {/* Thumbnail */}
-                {blog.thumbnail && (
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={blog.thumbnail}
-                      alt={blog.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
+            <div className="mt-auto pt-3 border-t border-white/5 flex justify-between items-center">
+              <div className="flex gap-1 flex-wrap">
+                {project.tech?.slice(0, 2).map((t, i) => (<span key={i} className="text-[10px] px-2 py-0.5 bg-surface-variant rounded text-on-surface-variant">{t}</span>))}
+              </div>
+              <div className="flex gap-2">
+                {project.liveDemo && (
+                  <a href={project.liveDemo} target="_blank" className="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="Live Demo">
+                    <ExternalLink size={14} className="text-primary" />
+                  </a>
                 )}
-
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-[#ccd6f6] mb-2 group-hover:text-[#64ffda] transition-colors">{blog.title}</h3>
-                  <p className="text-[#64ffda] text-xs mb-3 font-mono flex items-center gap-2">
-                    <Calendar size={14} />
-                    {blog.readTime}
-                  </p>
-                  
-                  {/* Render HTML content preview */}
-                  <div
-                    className="text-[#8892b0] text-sm mb-4 line-clamp-3"
-                    dangerouslySetInnerHTML={{ __html: blog.content }}
-                  ></div>
-
-                  <Link
-                    href={`/blogs/${blog._id}`}
-                    className="inline-flex items-center gap-2 text-[#64ffda] hover:text-[#64ffda]/80 transition-colors text-sm font-mono"
-                  >
-                    Read More
-                    <ExternalLink size={14} />
-                  </Link>
-                </div>
+                {project.github && (
+                  <a href={project.github} target="_blank" className="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="GitHub">
+                    <Github size={14} className="text-on-surface-variant" />
+                  </a>
+                )}
               </div>
-            ))}
+            </div>
           </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-          {/* View All Blogs Button */}
-          <div className="flex justify-center mt-8">
-            <Link
-              href="/blogs"
-              className="bg-transparent border border-[#64ffda] text-[#64ffda] py-3 px-8 rounded-lg text-sm font-mono hover:bg-[#64ffda]/10 transition-all duration-200"
-            >
-              View All Blogs
-            </Link>
-          </div>
+// Skills Section
+function SkillsSection({ skills }: { skills: { frontend: string[], backend: string[], ai: string[], tools: string[] } }) {
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl md:text-3xl font-bold text-on-surface">Skills & Technologies</h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <div className="acrylic-surface p-5 rounded-xl border border-white/5">
+          <div className="flex items-center gap-3 mb-4"><Code className="text-primary" size={24} /><h3 className="font-semibold text-on-surface">Frontend</h3></div>
+          <div className="flex flex-wrap gap-2">{skills.frontend.map((skill, i) => (<span key={i} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm border border-primary/20">{skill}</span>))}</div>
         </div>
-      </section>
 
-       <section id="Experience" className="py-20 px-6 bg-[#112240]">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-[#ccd6f6] mb-12 relative">
-            <span className="text-[#64ffda] text-2xl mr-2 font-mono">06.</span>
-            Experence & Certifications
-            <div className="absolute bottom-0 left-0 w-24 h-0.5 bg-[#64ffda]"></div>
-          </h2>
+        <div className="acrylic-surface p-5 rounded-xl border border-white/5">
+          <div className="flex items-center gap-3 mb-4"><Cloud className="text-secondary" size={24} /><h3 className="font-semibold text-on-surface">Backend</h3></div>
+          <div className="flex flex-wrap gap-2">{skills.backend.map((skill, i) => (<span key={i} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm border border-secondary/20">{skill}</span>))}</div>
+        </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {certificates.map((cert, index) => (
-              <div key={index} className="bg-[#0a192f] rounded-2xl p-4 border border-[#233554] hover:border-[#64ffda]/50 transition-colors">
-                <img src={cert.image} alt={cert.title} className="w-full h-80 object-contain mb-4" />
-                <h3 className="text-xl font-bold text-[#ccd6f6] mb-2">{cert.title}</h3>
-                <p className="text-[#8892b0] text-sm flex items-center gap-2">
-                  <Calendar size={14} />
-                  {cert.date}
-                </p>
+        <div className="acrylic-surface p-5 rounded-xl border border-white/5">
+          <div className="flex items-center gap-3 mb-4"><Globe className="text-secondary" size={24} /><h3 className="font-semibold text-on-surface">AI & ML</h3></div>
+          <div className="flex flex-wrap gap-2">{skills.ai.map((skill, i) => (<span key={i} className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm border border-secondary/20">{skill}</span>))}</div>
+        </div>
+
+        <div className="acrylic-surface p-5 rounded-xl border border-white/5">
+          <div className="flex items-center gap-3 mb-4"><Settings className="text-on-surface-variant" size={24} /><h3 className="font-semibold text-on-surface">Tools & DevOps</h3></div>
+          <div className="flex flex-wrap gap-2">{skills.tools.map((skill, i) => (<span key={i} className="px-3 py-1 bg-surface-variant text-on-surface-variant rounded-full text-sm">{skill}</span>))}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Blog Section
+function BlogSection({ blogs, searchQuery, setSearchQuery }: { blogs: Blog[], searchQuery: string, setSearchQuery: (q: string) => void }) {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-on-surface">Blog</h2>
+        <div className="flex items-center gap-2 bg-black/20 rounded-lg px-3 py-2 border border-white/5">
+          <Search size={18} className="text-on-surface-variant" />
+          <input
+            className="bg-transparent border-none text-sm focus:ring-0 p-0 placeholder:text-on-surface-variant w-40 md:w-60"
+            placeholder="Search posts..."
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {blogs.length === 0 ? (
+        <div className="text-center py-12 text-on-surface-variant">
+          <FileText size={48} className="mx-auto mb-4 opacity-50" />
+          <p className="text-sm">No blog posts found</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {blogs.map((blog) => (
+            <Link key={blog._id} href={`/blogs/${blog.slug}`} className="group flex items-center gap-4 p-4 bg-surface-container/50 border border-white/5 rounded-xl hover:border-primary/30 transition-all">
+              <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden shrink-0">
+                {blog.thumbnail ? <img src={blog.thumbnail} alt={blog.title} className="w-full h-full object-cover" /> : <FileText className="text-primary" size={24} />}
               </div>
-            ))}
+              <div className="flex-1 min-w-0">
+                <h4 className="font-semibold text-on-surface group-hover:text-primary transition-colors truncate">{blog.title}</h4>
+                <p className="text-xs text-on-surface-variant mt-1">{blog.category} • {blog.readTime}</p>
+              </div>
+              <ArrowRight className="text-on-surface-variant group-hover:text-primary group-hover:translate-x-1 transition-all" size={16} />
+            </Link>
+          ))}
+        </div>
+      )}
+
+      <Link href="/blogs" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-sm">
+        <span>View All Posts</span>
+        <ArrowRight size={14} />
+      </Link>
+    </div>
+  );
+}
+
+// Contact Section
+function ContactSection({ form, setForm, status, onSubmit }: { form: { name: string; email: string; message: string }, setForm: any, status: string, onSubmit: any }) {
+  return (
+    <div className="space-y-6 max-w-xl">
+      <div><h2 className="text-2xl md:text-3xl font-bold text-on-surface mb-2">Get In Touch</h2><p className="text-on-surface-variant">Feel free to reach out for collaborations or just a friendly chat.</p></div>
+
+      <form onSubmit={onSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-on-surface-variant px-1" htmlFor="name">Name</label>
+            <input id="name" type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your name" required className="bg-black/20 border-0 border-b border-outline-variant hover:border-outline focus:ring-0 focus:border-primary transition-all px-4 py-2 rounded-lg text-on-surface text-sm" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-on-surface-variant px-1" htmlFor="email">Email</label>
+            <input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="your@email.com" required className="bg-black/20 border-0 border-b border-outline-variant hover:border-outline focus:ring-0 focus:border-primary transition-all px-4 py-2 rounded-lg text-on-surface text-sm" />
           </div>
         </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-20 px-6 bg-[#0a192f]">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-[#ccd6f6] mb-4">Get In Touch</h2>
-
-          <p className="text-[#8892b0] text-lg mb-8 max-w-2xl mx-auto">
-            I'm currently looking for work as a freelancer,and my inbox is always open.
-            Whether you have a question or just want to say hi, I'll do my best to get back to you!
-          </p>
-
-          <Link
-            href="mailto:n31mahesh@gmail.com"
-            className="inline-flex items-center gap-2 border border-[#64ffda] text-[#64ffda] px-8 py-3 rounded-lg hover:bg-[#64ffda]/10 transition-colors mb-8 font-mono"
-          >
-            <Mail size={20} />
-            Say Hello
-          </Link>
-
-          <div className="flex justify-center gap-6">
-            <Link href="https://github.com/devmahesh-5" target="_blank" className="text-[#8892b0] hover:text-[#64ffda] transition-colors">
-              <Github size={24} />
-            </Link>
-            <Link href="https://www.linkedin.com/in/mahesh-bhandari-b901a4312/" target="_blank" className="text-[#8892b0] hover:text-[#64ffda] transition-colors">
-              <Linkedin size={24} />
-            </Link>
-            <Link href="#" target="_blank" className="text-[#8892b0] hover:text-[#64ffda] transition-colors">
-              <Twitter size={24} />
-            </Link>
-            <Link href="https://www.facebook.com/mahesh.bhandari.31149359/" target="_blank" className="text-[#8892b0] hover:text-[#64ffda] transition-colors">
-              <Facebook size={24} />
-            </Link>
-          </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm text-on-surface-variant px-1" htmlFor="message">Message</label>
+          <textarea id="message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Your message..." rows={5} required className="bg-black/20 border-0 border-b border-outline-variant hover:border-outline focus:ring-0 focus:border-primary transition-all px-4 py-2 rounded-lg text-on-surface text-sm resize-none" />
         </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-[#0a192f] border-t border-[#112240] py-8 px-6">
-        <div className="container mx-auto text-center text-[#8892b0] text-sm">
-          <p>&copy; {new Date().getFullYear()} Mahesh Bhandari. All Rights Reserved</p>
-        </div>
-      </footer>
+        <button type="submit" disabled={status === 'sending' || status === 'sent'} className="w-full md:w-auto px-8 py-3 bg-primary-container hover:brightness-110 active:scale-95 transition-all text-on-primary-container font-medium rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+          {status === 'sending' ? 'Sending...' : status === 'sent' ? 'Sent!' : 'Send Message'}
+        </button>
+      </form>
     </div>
   );
 }
