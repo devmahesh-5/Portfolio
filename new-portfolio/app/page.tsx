@@ -20,6 +20,7 @@ import {
   ArrowRight,
   X,
   ExternalLink,
+  Briefcase,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -77,6 +78,7 @@ export default function Home() {
   const [isWindowOpen, setIsWindowOpen] = useState(false);
   const [weather, setWeather] = useState<{ temp: number; condition: string; icon: string; location: string; cityName: string } | null>(null);
   const [blogsCache, setBlogsCache] = useState<{ data: Blog[]; timestamp: number } | null>(null);
+  const [showCv, setShowCv] = useState(false);
   const BLOGS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   useEffect(() => {
@@ -157,21 +159,42 @@ export default function Home() {
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'about': return <AboutSection />;
+      case 'about': return <AboutSection onViewCv={() => setShowCv(true)} />;
       case 'projects': return <ProjectsSection projects={projects} />;
       case 'skills': return <SkillsSection skills={skills} />;
       case 'blog': return <BlogSection blogs={filteredBlogs} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />;
       case 'contact': return <ContactSection form={contactForm} setForm={setContactForm} status={contactStatus} onSubmit={handleContactSubmit} />;
-      default: return <AboutSection />;
+      default: return <AboutSection onViewCv={() => setShowCv(true)} />;
     }
   };
 
   return (
     <div className="min-h-screen relative bg-background">
-      {/* Background */}
+      {/* Background - Windows 11 Bloom Wallpaper */}
       <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a3a5f] via-[#121414] to-[#0c0f0f]"></div>
-        <div className="absolute top-0 left-0 right-0 h-96 bg-gradient-to-b from-[#0078d4]/20 to-transparent"></div>
+        {/* Windows 11 Bloom Gradient Background */}
+        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bloom1" cx="30%" cy="20%" r="60%">
+              <stop offset="0%" stopColor="#4a90d9" stopOpacity="0.8"/>
+              <stop offset="50%" stopColor="#2d5a8a" stopOpacity="0.4"/>
+              <stop offset="100%" stopColor="#1a1a2e" stopOpacity="0"/>
+            </radialGradient>
+            <radialGradient id="bloom2" cx="70%" cy="60%" r="50%">
+              <stop offset="0%" stopColor="#7b68ee" stopOpacity="0.6"/>
+              <stop offset="50%" stopColor="#4a4080" stopOpacity="0.3"/>
+              <stop offset="100%" stopColor="#1a1a2e" stopOpacity="0"/>
+            </radialGradient>
+            <linearGradient id="base" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#1a1a2e"/>
+              <stop offset="100%" stopColor="#0a0a12"/>
+            </linearGradient>
+          </defs>
+          <rect fill="url(#base)" width="100%" height="100%"/>
+          <rect fill="url(#bloom1)" width="100%" height="100%"/>
+          <rect fill="url(#bloom2)" width="100%" height="100%"/>
+        </svg>
+        <div className="absolute inset-0 bg-black/30"></div>
       </div>
 
       {/* Always visible sidebar - Weather & Profile only */}
@@ -234,12 +257,12 @@ export default function Home() {
             </div>
             <span className="text-xs text-white font-medium">Contact</span>
           </button>
-          <a href="/mahesh_cv.pdf" target="_blank" className="flex flex-col items-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-all group">
+          <button onClick={() => setShowCv(true)} className="flex flex-col items-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-all group">
             <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center border border-secondary/30">
               <FileText className="text-secondary" size={24} />
             </div>
             <span className="text-xs text-white font-medium">My CV</span>
-          </a>
+          </button>
         </div>
       )}
 
@@ -377,12 +400,32 @@ export default function Home() {
           </div>
         </div>
       </nav>
+
+      {/* CV Viewer Modal */}
+      {showCv && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-4xl h-[90vh] mica-surface rounded-xl window-shadow overflow-hidden flex flex-col border border-white/10">
+            <header className="flex justify-between items-center px-4 py-3 bg-surface-container-low/80 backdrop-blur-xl border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <FileText className="text-primary" size={20} />
+                <span className="font-medium text-sm text-on-surface">Mahesh_Bhandari_CV.pdf</span>
+              </div>
+              <button onClick={() => setShowCv(false)} className="p-2 hover:bg-white/10 rounded-lg transition-colors">
+                <X size={18} className="text-on-surface-variant" />
+              </button>
+            </header>
+            <div className="flex-1 overflow-hidden bg-surface-dim">
+              <iframe src="/mahesh_cv.pdf" className="w-full h-full" title="CV" />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 // About Section
-function AboutSection() {
+function AboutSection({ onViewCv }: { onViewCv?: () => void }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-primary font-mono mb-4">
@@ -438,6 +481,12 @@ function AboutSection() {
           <Mail size={18} />
           <span>Email</span>
         </a>
+        {onViewCv && (
+          <button onClick={onViewCv} className="flex items-center gap-2 px-4 py-2 bg-secondary text-on-secondary rounded-lg hover:brightness-110 transition-all text-sm">
+            <FileText size={18} />
+            <span>View CV</span>
+          </button>
+        )}
       </div>
     </div>
   );
