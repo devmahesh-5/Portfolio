@@ -51,19 +51,18 @@ interface Blog {
 }
 
 const projects = [
-  { title: "RoomBazar", description: "E-commerce Marketplace", image: "/room-bazar.png", liveDemo: "https://room-bazar.vercel.app/", tech: ["Next.js", "MongoDB", "JWT", "Tailwind"] },
-  { title: "Sikshya Kendra", description: "Educational Platform", image: "/sk.png", liveDemo: "https://sikshyakendra.com/", tech: ["React", "Node.js", "MongoDB"] },
-  { title: "Megablog", description: "Appwrite Backend Blog", image: "/mgblog.png", liveDemo: "http://appwrite-mega-blog-gamma.vercel.app", tech: ["React", "Appwrite", "Tailwind"] },
-  { title: "Tweet-Tube", description: "Twitter & YouTube Backend", image: "/tweet-tube.png", github: "https://github.com/devmahesh-5/Tweet-Tube", tech: ["Express", "MongoDB"] },
-  { title: "Mahesh'Keep", description: "Note Taking App", image: "/note.png", liveDemo: "https://devmahesh-5.github.io/Note/", tech: ["HTML", "CSS", "JavaScript"] },
-  { title: "Tent Sewing", description: "Business Website", image: "/tent.png", liveDemo: "https://devmahesh-5.github.io/Tent-Sewing-Enterprise/", tech: ["React", "Express", "MongoDB"] },
+  { title: "GPT-3 Transformer — From Scratch", description: "355M-parameter Transformer implementing multi-head self-attention, positional encoding, and layer normalization", image: "/instructor_locus.png", github: "https://github.com/devmahesh-5/GenAI/tree/main/Foundational-Model", tech: ["Python", "PyTorch", "LLM"] },
+  { title: "YouTube Video Chat — RAG Q&A System", description: "RAG pipeline that ingests YouTube transcripts for natural language Q&A over video content", image: "/instructor_locus.png", github: "https://github.com/devmahesh-5/GenAI/tree/main/RAG", tech: ["Python", "LangChain", "Vector DB"] },
+  { title: "Sikshya Kendra", description: "EdTech Platform — online courses, live classes, and in-app tutoring", image: "/sk.png", liveDemo: "https://sikshyakendra.com/", tech: ["React", "Node.js", "MongoDB"] },
+  { title: "Room-Bazar", description: "Room Rental Marketplace for Kathmandu and Pokhara", image: "/room-bazar.png", liveDemo: "https://room-bazar.vercel.app/", github: "https://github.com/devmahesh-5/Room-Bazar", tech: ["Next.js", "MongoDB", "JWT", "Tailwind"] },
+  { title: "Tweet-Tube", description: "Unified REST API combining Twitter-style posts with YouTube-style video metadata", image: "/tweet-tube.png", github: "https://github.com/devmahesh-5/Tweet-Tube", tech: ["Express", "MongoDB"] },
 ];
 
 const skills = {
   frontend: ["React", "Next.js", "TypeScript", "Tailwind CSS", "HTML5 & CSS3", "JavaScript"],
-  backend: ["Node.js", "Express", "MongoDB", "PostgreSQL", "RESTful APIs", "Redis"],
-  ai: ["Python", "LLMs", "RAG", "LangChain", "LangGraph", "AI Integration"],
-  tools: ["Git", "GitHub Actions", "Docker", "Postman", "VS Code", "Figma"],
+  backend: ["Node.js", "Express.js", "MongoDB", "FastAPI", "Django", "REST API Design"],
+  ai: ["Python", "PyTorch", "RAG", "LangChain", "Vector Embeddings", "Transformer Architectures"],
+  tools: ["Git", "GitHub Actions", "Docker", "Kubernetes", "Postman", "Bash"],
 };
 
 export default function Home() {
