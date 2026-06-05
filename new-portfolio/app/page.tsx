@@ -51,7 +51,7 @@ interface Blog {
 }
 
 const projects = [
-  { title: "GPT-3 Transformer — From Scratch", description: "355M-parameter Transformer implementing multi-head self-attention, positional encoding, and layer normalization", image: "/instructor_locus.png", github: "https://github.com/devmahesh-5/GenAI/tree/main/Foundational-Model", tech: ["Python", "PyTorch", "LLM"] },
+  { title: "GPT-2 Transformer — From Scratch", description: "355M-parameter Transformer implementing multi-head self-attention, positional encoding, and layer normalization", image: "/instructor_locus.png", github: "https://github.com/devmahesh-5/GenAI/tree/main/Foundational-Model", tech: ["Python", "PyTorch", "LLM"] },
   { title: "YouTube Video Chat — RAG Q&A System", description: "RAG pipeline that ingests YouTube transcripts for natural language Q&A over video content", image: "/instructor_locus.png", github: "https://github.com/devmahesh-5/GenAI/tree/main/RAG", tech: ["Python", "LangChain", "Vector DB"] },
   { title: "Sikshya Kendra", description: "EdTech Platform — online courses, live classes, and in-app tutoring", image: "/sk.png", liveDemo: "https://sikshyakendra.com/", tech: ["React", "Node.js", "MongoDB"] },
   { title: "Room-Bazar", description: "Room Rental Marketplace for Kathmandu and Pokhara", image: "/room-bazar.png", liveDemo: "https://room-bazar.vercel.app/", github: "https://github.com/devmahesh-5/Room-Bazar", tech: ["Next.js", "MongoDB", "JWT", "Tailwind"] },
